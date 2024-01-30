@@ -1,4 +1,4 @@
-<?
+<?php
 if($config->usergroups){
   $allzones = $group->listallzones("", 1);
   $user->error = $group->error;

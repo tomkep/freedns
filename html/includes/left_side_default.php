@@ -1,4 +1,4 @@
-<?
+<?php
 // Personnalize your config HERE
 // zone numbers
 include 'currentzones.php';

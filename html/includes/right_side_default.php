@@ -1,4 +1,4 @@
-<?
+<?php
 
 // personnalize your layout HERE
 

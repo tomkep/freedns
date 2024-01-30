@@ -1,4 +1,4 @@
-<?
+<?php
 $content = '
     <div class="boxheader">Logiciel XName</div>
     <div class="boxcontent">

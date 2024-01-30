@@ -1,4 +1,4 @@
-<?
+<?php
 
 // if site has not been configured, print "friendly" message
 if(!is_file("libs/config.php")){

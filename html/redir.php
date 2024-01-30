@@ -68,7 +68,7 @@ else
 </body>
 </noframes>
 </html>
-<?
+<?php
   }
 }
 ?>

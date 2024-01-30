@@ -1,4 +1,4 @@
-<?
+<?php
 $title = $l['str_currently_hosted'];
 global $user;
 $cP=countPrimary();

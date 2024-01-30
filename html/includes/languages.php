@@ -1,4 +1,4 @@
-<?
+<?php
 // print a box with list of available languages
 
 $title = $l['str_languages_title'];

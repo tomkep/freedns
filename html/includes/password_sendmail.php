@@ -1,4 +1,4 @@
-<?
+<?php
 $mailbody = '
 ' . $l['str_email_this_is_an_automatic_email'] . '
 

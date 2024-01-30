@@ -3,7 +3,7 @@
 
 <!-- box start for right column -->
 <div id="rightcolumn">
-<?
+<?php
 
 // personnalize your layout HERE
 

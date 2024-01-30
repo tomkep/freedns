@@ -1,4 +1,4 @@
-<?
+<?php
  /*
   This file is part of XName.org project
   See  http://www.xname.org/ for details

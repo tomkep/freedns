@@ -1,4 +1,4 @@
-<?
+<?php
 $content = '
   <dt>Rekordy CAA [2017-09-19]</dt>
   <dd>Dodałem możliwość edycji rekordów CAA (określających kto może wydawać certyfikaty TLS dla domeny).

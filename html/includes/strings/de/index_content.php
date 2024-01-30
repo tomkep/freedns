@@ -1,4 +1,4 @@
-<?
+<?php
 $content = '
   <dt>CAA-Einträge [2017-09-19]</dt>
   <dd>

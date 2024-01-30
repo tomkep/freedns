@@ -1,6 +1,6 @@
 <!-- box start for left column -->
 <div id="leftcolumn">
-<?
+<?php
 // Personnalize your config HERE
 // zone numbers
 include 'currentzones.php';

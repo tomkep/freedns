@@ -1,4 +1,4 @@
-<?
+<?php
 $l["str_add_user"] = "Dodaj użytkownika.";
 $l["str_administrate_your_group"] = "Zarządzaj grupą.";
 $l["str_administrator_delete_content"] = "Jako że jesteś administratorem grupy, cała Twoja grupa zostanie skasowanaz naszych serwerów, zarówno strefy, jak i członkowie grupy.";

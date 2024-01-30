@@ -1,4 +1,4 @@
-<?
+<?php
 $title = $l['str_contact_title'];
 $googleplus = '<p align="center"><a href="https://plus.google.com/112615986755984549471" rel="publisher">Google+</a>';
 $content = sprintf($l['str_contact_for_bugs_contact_us'] . $googleplus,

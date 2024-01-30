@@ -1,4 +1,4 @@
-<?
+<?php
 $content = '
   <dt>CAA records [2017-09-19]</dt>
   <dd>FreeDNS now supports CAA records. You can enable them in user options.</dd>
