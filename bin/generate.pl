@@ -46,7 +46,7 @@ $LOG_PREFIX .= $str_log_generate_prefix{$SITE_DEFAULT_LANGUAGE};
 ########################################################################
 # STOP STOP STOP STOP STOP STOP STOP STOP STOP STOP STOP STOPS STOP STOP
 #
-# Do not edit anything below this line           
+# Do not edit anything below this line
 ########################################################################
 
 
@@ -87,7 +87,7 @@ open(LOG, ">>" . $LOG_FILE);
 # tv_interval ($t1) . ")\n";
 
 
-$query = "SELECT count(*) as count FROM dns_zone 
+$query = "SELECT count(*) as count FROM dns_zone
   WHERE status='D' OR status='M'";
 
 my $sth = dbexecute($query,$dbh,LOG);
@@ -101,7 +101,7 @@ sub RetrieveRecords {
   my $ret = "";
 
   $sth1 = dbexecute("SELECT val1,val2,val3,val4,val5,ttl
-    FROM dns_record 
+    FROM dns_record
     WHERE zoneid='$zoneid' AND type='$type'
     ORDER BY val1",$dbh,LOG);
 
@@ -189,7 +189,7 @@ if($count){
   if($#output2 != -1){
     print  LOG logtimestamp() . " " . $LOG_PREFIX .
       " : " . $str_log_error_can_not_backup{$SITE_DEFAULT_LANGUAGE} . "\n" .
-      "\t" . $output2[0] . "\n";      
+      "\t" . $output2[0] . "\n";
   }else{
 
     open(CONF, ">" . $NAMED_CONF_ZONES) ||   print LOG logtimestamp() . " " .
@@ -199,8 +199,8 @@ if($count){
     # primary NS #
     ##############
 
-    $query = "SELECT c.zoneid, c.xfer,LOWER(z.zone) AS zone FROM 
-      dns_confprimary c, dns_zone z, dns_user u 
+    $query = "SELECT c.zoneid, c.xfer,LOWER(z.zone) AS zone FROM
+      dns_confprimary c, dns_zone z, dns_user u
       WHERE c.zoneid=z.id AND u.id=z.userid AND z.status!='B'";
 
     my $sth = dbexecute($query,$dbh,LOG);
@@ -243,7 +243,7 @@ if($count){
     ################
 
     $query = "SELECT LOWER(z.zone) AS zone, c.masters, c.xfer
-      FROM dns_confsecondary c, dns_zone z, dns_user u 
+      FROM dns_confsecondary c, dns_zone z, dns_user u
       WHERE c.zoneid=z.id AND u.id=z.userid AND z.status!='B'";
 
     $sth = dbexecute($query,$dbh,LOG);
@@ -261,7 +261,7 @@ if($count){
 
         # Add ALL xname servers to allow-transfer list if not any
         if($xfer ne "any"){
-          # concatenate serverlist,servertransferlist and xferlist  
+          # concatenate serverlist,servertransferlist and xferlist
           $xfer = $serverlist . $servertransferlist . $xfer . ";" . $SITE_WEB_SERVER_IP;
           # explode xferlist to have unique IP addresses
           undef %tmp;
@@ -316,7 +316,7 @@ if($count){
 
     my $sth = dbexecute($query,$dbh,LOG);
     while (my $ref = $sth->fetchrow_hashref()) {
-      # for each zone, 
+      # for each zone,
 
       $zone = $ref->{'zone'};
       ($zonef = $zone) =~ s,/,\\,g;
@@ -354,7 +354,7 @@ if($count){
         $origin = $2;
         $prefix = $1;
       }else{
-        print LOG logtimestamp() . " " . $LOG_PREFIX . " : " . 
+        print LOG logtimestamp() . " " . $LOG_PREFIX . " : " .
           sprintf($str_log_error_zone_x_not_valid{$SITE_DEFAULT_LANGUAGE}, $zone);
       }
 
@@ -378,9 +378,9 @@ if($count){
       $toprint .= RetrieveRecords("SUBNS");
       $toprint .= "\n";
 
-      # open file 
+      # open file
       open(DATA_FILE, ">" . $NAMED_DATA_DIR . $NAMED_MASTERS_DIR . $zonef ) or
-       print LOG logtimestamp() .  " " . $LOG_PREFIX . " : " . 
+       print LOG logtimestamp() .  " " . $LOG_PREFIX . " : " .
         sprintf($str_log_error_opening_x{$SITE_DEFAULT_LANGUAGE}, $NAMED_DATA_DIR) .
         $NAMED_MASTERS_DIR . $zonef . "\n";
       print DATA_FILE $toprint;
@@ -414,7 +414,7 @@ if($count){
       # mail admin
       # copy to named.conf.error, send mail, restore backup
       # where is that "restore backup"?
-      $command=$CP_COMMAND . " " . $NAMED_CONF_ZONES . " " . 
+      $command=$CP_COMMAND . " " . $NAMED_CONF_ZONES . " " .
         $NAMED_TMP_DIR . "named.zones.error";
       system($command);
 
@@ -440,8 +440,8 @@ if($count){
       sendmail %mail;
 
     }else{
-      # move backup to named.conf.bak 
-      $command=$MV_COMMAND . " " . 
+      # move backup to named.conf.bak
+      $command=$MV_COMMAND . " " .
         $NAMED_TMP_DIR . "named.zones.bak-" . $$ . " " .
         $NAMED_TMP_DIR . "named.zones.bak";
       system($command);
@@ -453,8 +453,8 @@ if($count){
       #    zones to slaves (with master set to primary named), something like:
       #    sed 's/type master;/type slave; notify no; masters {SITE_NS_IP; };/'
       # 3. rsync transformed file to secondary named
-      # 4. rndc reconfig for secondary named 
-      system("$HELPER_COMMAND"); 
+      # 4. rndc reconfig for secondary named
+      system("$HELPER_COMMAND");
       # print LOG logtimestamp() . " " . $LOG_PREFIX . " : DEBUG : generate helper done " .
       #   tv_interval ($t0) . "\n";
     }
@@ -486,7 +486,7 @@ if($count){
     $sth->finish();
     ########################################################################
 
-    # print LOG logtimestamp() . " " . $LOG_PREFIX . 
+    # print LOG logtimestamp() . " " . $LOG_PREFIX .
     #   " : DEBUG : rndc $tmp_counter reloads done " . tv_interval ($t0) . "\n";
 
 
@@ -505,7 +505,7 @@ if($count){
     $sth->finish();
 
     # list of server IPs, to be included in allow_transfer if not "any"
-    # and list of master servers... 
+    # and list of master servers...
     $masters=$SITE_NS_IP . ";";
     foreach(values(%serverip)){
       $masters .= $_ . ";";
@@ -574,22 +574,22 @@ if($count){
 
       if(!sendmail %mail) {
         require $XNAME_HOME . "strings/" . $EMAIL_DEFAULT_LANGUAGE . "/strings.inc";
-        print LOG logtimestamp() . " " . $LOG_PREFIX . " : " . 
+        print LOG logtimestamp() . " " . $LOG_PREFIX . " : " .
           sprintf($str_log_error_sending_email_x{$SITE_DEFAULT_LANGUAGE},
             $Mail::Sendmail::error)
           . "\n";
       }
     } # end while each %zonelist
     ########################################################################
-    # print LOG logtimestamp() . " " . $LOG_PREFIX . " : DEBUG : sending mails done " . 
+    # print LOG logtimestamp() . " " . $LOG_PREFIX . " : DEBUG : sending mails done " .
     #   tv_interval ($t0) . "\n";
 
   } # end named.conf backup successfull
 
-} # end count of zone modified >= 1 
+} # end count of zone modified >= 1
 
 # Disconnect from the database.
 $dbh->disconnect();
-#print LOG logtimestamp() . " " . $LOG_PREFIX . " : DEBUG : stop : count=". 
+#print LOG logtimestamp() . " " . $LOG_PREFIX . " : DEBUG : stop : count=".
 #  $count ." (" . tv_interval ($t1) . ")\n";
 close LOG;

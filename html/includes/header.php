@@ -56,7 +56,7 @@ if(isset($_REQUEST)){
   if(!isset($logout)){
     $logout=0;
   }
-  
+
 }
 
 $html = new Html();
@@ -130,7 +130,7 @@ if(isset($user->lang)){
 }
 }
 $lang=substr($lang, 0, 2);
-// verify if language exists ! 
+// verify if language exists !
 if(!is_file('includes/strings/' . $lang . '/strings.php')){
   $lang = $config->defaultlanguage;
 }
@@ -157,7 +157,7 @@ if($config->usergroups){
   }
 }
 
-  
+
 if(empty($idsession)){
   $idsession=$user->idsession;
 }
@@ -165,7 +165,7 @@ if(empty($idsession)){
 if(!empty($idsession)){
   $link="?idsession=" . xssafe($idsession);
   $hiddenfields = '<input type="hidden" name="idsession" value="' . xssafe($idsession) . '">';
-  // add language only if different 
+  // add language only if different
   if(strcmp($lang,$user->lang)){
     $link .= "&amp;language=" . $lang;
     $hiddenfields .= '<input type="hidden" name="language" value="' . $lang . '">';

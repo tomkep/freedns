@@ -13,7 +13,7 @@ $content = '
     <li> Modifiez ce texte - html/includes/strings/fr/index_content.php (et copiez
     ce fichier dans tous les répertoires html/includes/strings/*) </li>
     <li> Modifiez tous les fichiers html/*.php pour correspondre à votre
-    design html (toutes les fonctions graphiques utilisées sont regroupées 
+    design html (toutes les fonctions graphiques utilisées sont regroupées
     dans libs/html.php, n\'hésitez pas à utiliser vos propres fonctions !).
     La classe Html n\'est utilisée que dans ces fichiers et includes/*.php</li>
     </ul>

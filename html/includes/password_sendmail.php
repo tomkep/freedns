@@ -8,7 +8,7 @@ $mailbody = '
 
 ' . $config->mainurl . 'password.php?id=' . $id . '&language=' . $lang . '
 
--- 
+--
 ' . $config->emailsignature . '
 ';
 ?>

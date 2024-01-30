@@ -7,7 +7,7 @@ Fri Jan 20 2006 Yann Hirou (hirou@xname.org)
 	* Bug in TXT handling, causing problem with TXT content starting with "n
 	or "* where * is any character significant with a \ before
 	reported by olivier at picapo dot com
-	
+
 Thu Dec 22 2005 Yann Hirou (hirou@xname.org)
 
 	* web interface - libs/stats.php added, with count* functions
@@ -41,7 +41,7 @@ Tue Oct 04 2005 Yann Hirou (hirou@xname.org)
 	* web interface - replacement of html->generic_* with html->string_
 	  and %s inside
 
-Mon Oct 03 2005 
+Mon Oct 03 2005
 
 	* creation.sql corrections
 
@@ -85,7 +85,7 @@ Thu Jul 28 2005 Piotr Kucharski (chopin@sgh.waw.pl)
 
 Wed Jul 20 2005 Yann Hirou (hirou@xname.org)
 
-	* xmlrpc corrected - single delete now works again, without the use of 
+	* xmlrpc corrected - single delete now works again, without the use of
 	  "*" for old address. This was due to the primary->Delete() params change.
 
 	* FREEZE-V2_30 tag created.
@@ -105,16 +105,16 @@ Wed Jun 29 2005 Yann Hirou (hirou@xname.org)
 
 Mon May 02 2005 Piotr Kucharski (chopin@sgh.waw.pl)
 
-	* (posted on 17 feb. on xnamesoft-dev) 
+	* (posted on 17 feb. on xnamesoft-dev)
 	  insertlogs.pl bug. It looks like a race condition,
 	  where insertlogs reads from a file,
-	  which is being written to, and not everything is read. 
+	  which is being written to, and not everything is read.
 
 Mon May 02 2005 Yann Hirou (hirou@xname.org)
 
 	* PTR record is allowed on zone itself.
 
-	* addslashes added for names in  libs/primary.php deleteArecord 
+	* addslashes added for names in  libs/primary.php deleteArecord
 
 Fri Feb 18 2005 Yann Hirou (hirou@xname.org)
 
@@ -139,7 +139,7 @@ Tue Oct 5 2004 Yann Hirou (hirou@xname.org)
 Fri Sep 24 2004 Yann Hirou (hirou@xname.org)
 
 	* dns_user table clean-up, to be usable in a central authentication way.
-	  No more specific options, all options have to be set in the "options" TEXT 
+	  No more specific options, all options have to be set in the "options" TEXT
 	  field.
 
 	* config.default (html & bin) modified to allow external "dns_user" table
@@ -150,11 +150,11 @@ Fri Sep 24 2004 Yann Hirou (hirou@xname.org)
 	* html/libs/auth.php implements an Auth class with basic functions from which user inherits.
 	  Functions moved from user.php to auth:
 	  cleanId, Login, Exists, Valid, userCreate, changeLogin, updatePassword,
-	  Retrievemail, getEmail, Changemail, Retrievepassword, generateIDEmail, 
-	  storeIDEmail, validateIDEmail, generateIDRecovery, storeIDRecovery, 
+	  Retrievemail, getEmail, Changemail, Retrievepassword, generateIDEmail,
+	  storeIDEmail, validateIDEmail, generateIDRecovery, storeIDRecovery,
 	  validateIDRecovery, RetrieveLogin, RetrieveId, deleteUser, generateRandomPassword
 	  New created functions: getOptions, RetrieveOptions, updateOptions
-	 
+
 	* html/libs/user.php modified accordingly.
 	  Use of "options" field instead of all separate ones - grouprights, ipv6, txt, etc...
 
@@ -228,7 +228,7 @@ Tue Mar 23 2004 Yann Hirou (hirou@xname.org)
 
 Tue Mar 16 2004 Yann Hirou (hirou@xname.org)
 
-	* libs/user.php UPDATE dns_session to current date was done twice - 
+	* libs/user.php UPDATE dns_session to current date was done twice -
 	  in Login and checkidsession
 
 	* $db->totaltime added to know how much time spend in sql query per page
@@ -305,7 +305,7 @@ Tue Oct 28 2003 Yann Hirou (hirou@xname.org)
 
 Wed Oct 15 2003 Yann Hirou (hirou@xname.org)
 
-	* bug 81 should be corrected, logtimestamp uses strftime instead of localtime, 
+	* bug 81 should be corrected, logtimestamp uses strftime instead of localtime,
 	  adding use POSIX qw(strftime); to scripts using logtimestamp() function.
 
 Mon Oct 13 2003 Yann Hirou (hirou@xname.org)
@@ -358,8 +358,8 @@ Tue Sep 16 2003 Yann Hirou (hirou@xname.org)
 
 Mon Sep 15 2003 Yann Hirou (hirou@xname.org)
 
-	* in bin/generate.pl $SITE_WEB_SERVER_IP and transferip from servers 
-	  added automatically to allow-transfer, $EMAIL_SMTP added for 
+	* in bin/generate.pl $SITE_WEB_SERVER_IP and transferip from servers
+	  added automatically to allow-transfer, $EMAIL_SMTP added for
 	  non-hardcoded libnet-perl SMTP server
 
 Sun Sep 14 2003 Yann Hirou (hirou@xname.org)
@@ -368,7 +368,7 @@ Sun Sep 14 2003 Yann Hirou (hirou@xname.org)
 
 Fri Sep 5 2003 Yann Hirou (hirou@xname.org)
 
-	* checkIPv6 modified, was rejecting IPv6 addresses with dots 
+	* checkIPv6 modified, was rejecting IPv6 addresses with dots
 
 Fri Aug 29 2003 Yann Hirou (hirou@xname.org)
 
@@ -376,8 +376,8 @@ Fri Aug 29 2003 Yann Hirou (hirou@xname.org)
 
 Mon Aug 26 2003 Yann Hirou (hirou@xname.org)
 
-	* libs/user.php cleanId function was buggy. Now uses dateToTimestamp 
-	  (added to lib/xname.php) to substract 30*60 sec, and converts back using 
+	* libs/user.php cleanId function was buggy. Now uses dateToTimestamp
+	  (added to lib/xname.php) to substract 30*60 sec, and converts back using
 	  timestampToDate for SQL comparison.
 
 Mon Aug 25 2003 Yann Hirou (hirou@xname.org)
@@ -390,7 +390,7 @@ Mon Aug 25 2003 Yann Hirou (hirou@xname.org)
 
 	* Adding view zones file - zones.php, splitted from index.php
 
-	* indexes added to database (creation.sql): dns_zone(zone), 
+	* indexes added to database (creation.sql): dns_zone(zone),
 	  dns_session(date), dns_recovery(insertdate)
 
 	* Db query function modified, to have a query cache. db->query accept
@@ -435,14 +435,14 @@ Thu Mar 27 2003 Yann Hirou (hirou@xname.org)
 	* Functions moved from xmlrpc.php to libs/primary.php:
 	  getArecords Get all the A records with a given name in current zone
 	  DeleteMultipleARecords Delete all the A records for a given name in current zone
-	
+
 Tue Mar 25 2003 Yann Hirou (hirou@xname.org)
 
 	* Automatic modification of A record when modifying or deleting
 	  PTR added
-	
+
 	* checkIPv6 function modified to be used even if address is an octet
-	  
+
 Tue Mar 25 2003 Piotr KUCHARSKI (chopin@sgh.waw.pl)
 
 	* check email did not check for '.' in login part
@@ -452,7 +452,7 @@ Tue Mar 25 2003 Piotr KUCHARSKI (chopin@sgh.waw.pl)
 	* added mandatory field (default 1), changed GetListOfServerNames()
 	  function, changed modifying zone (new zone gets all optional NS-es
 	  prefilled in input boxes, user may choose to use it or not)
-	
+
 	* disclaimer window was not resizable and with no scrollbars
 
 	* more pl translation enhancement
@@ -466,17 +466,17 @@ Mon Mar 24 2003 Piotr KUCHARSKI (chopin@sgh.waw.pl)
 
 	* Adding the doc to use rsync as replication scheme.
 
-Wed Mar 19 2003 Piotr KUCHARSKI (chopin@sgh.waw.pl) 
+Wed Mar 19 2003 Piotr KUCHARSKI (chopin@sgh.waw.pl)
 
 	* session reinitialization modified, using SET date=now()
-	
+
 	* strftime usage cleanup
 
 Wed Mar 19 2003 Yann Hirou (hirou@xname.org)
 
 	* libs/primary.php updateSerial, flagModified functions added, AddPTRRecord
-	  modified - zoneid passed as param. 
-	  AddARecord now handle reverse PTR creation correctly. 
+	  modified - zoneid passed as param.
+	  AddARecord now handle reverse PTR creation correctly.
 	  Deleting A record deletes also reverse PTR if asked.
 
 Mon Mar 17 2003 Yann Hirou (hirou@xname.org)
@@ -495,14 +495,14 @@ Mon Mar 17 2003  Piotr KUCHARSKI (chopin@sgh.waw.pl)
 
 	* use of -1 as default ttl
 
-	* use Accept-Language as default language, is noone is given or if 
+	* use Accept-Language as default language, is noone is given or if
 	  user is not logged-in
 
-	* creation of libs/primary.php  DNSTTL($ttl) function, to convert db ttl 
+	* creation of libs/primary.php  DNSTTL($ttl) function, to convert db ttl
 	  into localized value
 
-	* @result was used but not initialized in bin/generate.pl when checking 
-	  config	
+	* @result was used but not initialized in bin/generate.pl when checking
+	  config
 
 Fri Mar 14 2003 Piotr KUCHARSKI (chopin@sgh.waw.pl)
 
@@ -512,7 +512,7 @@ Fri Mar 14 2003 Piotr KUCHARSKI (chopin@sgh.waw.pl)
 
 	* $config->ls not used anymore, opendir() and readdir() used instead
 
-	* libs/primary.php PrintTTL function added, "default" not used anymore. 
+	* libs/primary.php PrintTTL function added, "default" not used anymore.
 	  -1 in DB, localized in scripts.
 
 	* various bugfixes
@@ -520,8 +520,8 @@ Fri Mar 14 2003 Piotr KUCHARSKI (chopin@sgh.waw.pl)
 Tue Mar 11 2003 Yann Hirou (hirou@xname.org)
 
 	* i18n of bin/*.pl perl scripts added (en & fr)
-	
-	* bug in some logtimestamp() calls corrected in bin/*.pl, due to missing 
+
+	* bug in some logtimestamp() calls corrected in bin/*.pl, due to missing
 	  "use" params in some scripts
 
 Tue Mar 11 2003 Yann Hirou (hirou@xname.org)
@@ -566,21 +566,21 @@ Tue Mar 4 2003 Piotr KUCHARSKI (chopin@sgh.waw.pl)
 	  deleted all logs. Corrected by using check on purgebutton instead of purge.
 
 	* modyfing user does not save language bug corrected
-	
+
 Tue Mar 4 2003 Yann Hirou (hirou@xname.org)
-	
-	* modification of $PHP_SELF into $_SERVER["PHP_SELF"] (php3 can not be 
+
+	* modification of $PHP_SELF into $_SERVER["PHP_SELF"] (php3 can not be
 	  used anymore)
 
 	* Modification for bug Nb 71. every zone name is lowercase.
 
 	* Internationalization has been rewritten. Translations has to be remade.
-	  (now uses sprintf when needed, avoiding sentences to be splitted 
+	  (now uses sprintf when needed, avoiding sentences to be splitted
 	  to insert variables)
-	  
+
 Thu Feb 13 2003 Yann Hirou (hirou@xname.org)
 
-	* Add internationalization feature (english and french). user can choose its 
+	* Add internationalization feature (english and french). user can choose its
 	  language.
 
 Tue Jan 28 2003 Yann Hirou (hirou@xname.org)
@@ -590,15 +590,15 @@ Tue Jan 28 2003 Yann Hirou (hirou@xname.org)
 	  and to modify the default number of input rows per record.
 
 	* Activate nbrows and ipv6 for all users at creation and in preference page.
-	
+
 	* Modification of PrintModifyForm API: $params used instead of $advanced,
 	  to allow other parameters (like ipv6, nbrows)
 
 	* Correction of a bug in template - MX modification was missing.
-	
+
 	* Functions checkIPv6 and checkZoneWithDot added
-	
-	* in Primary.php, manage IPv6, reverse zones, reverse zone delegation, 
+
+	* in Primary.php, manage IPv6, reverse zones, reverse zone delegation,
 	  automatic filling of reverse zone when creating A record, html cleanup.
 
 Tue Jan 21 2003 Yann Hirou (hirou@xname.org)
@@ -610,7 +610,7 @@ Mon Jan 20 2003 Yann Hirou (hirou@xname.org)
 
 	* migration script from 2.1.x to 2.2.0 added.
 
-	* transferip field added to dns_server, GetListOfServerTransferIPs() added to 
+	* transferip field added to dns_server, GetListOfServerTransferIPs() added to
 	  xname.php, libs/secondary.php modified to print config sample with transferip list,
 	  bin/generate.pl modified to add transferip in allow-transfer list.
 
@@ -625,7 +625,7 @@ Fri Jan 17 2003 Yann Hirou (hirou@xname.org)
 	  multiservers. All files using nsname and nsaddress has been modified accordingly,
 	  and now all NS are mandatory in DNS conf, and a better list is printed as
 	  result for secondary modification.
-	
+
 Tue Jan 07 2003 Yann Hirou (hirou@xname.org)
 
 	* creation of bin/install.pl script, to be run for each new server added
@@ -641,13 +641,13 @@ Fri Jan 03 2003 Yann Hirou (hirou@xname.org)
 	* A touch of $NAMED_CONF has been added, to prevent generate.pl to crash
 	  if not present (ie for initial startup for example). Reported by
 	  Gunther Stammwitz <gs@mainlab.de>.
-	
+
 	* Zone status in modify.php now opens a new window, like in index.php.
 	  Reported by Gunther Stammwitz <gs@mainlab.de>.
-	
+
 Sat Dec 21 2002 Yann Hirou (hirou@xname.org)
 
-	* correction of a bug discovered by Dave Spenceley <ds@dspen.com>, preventing 
+	* correction of a bug discovered by Dave Spenceley <ds@dspen.com>, preventing
 		mail hosts without full qualified domain names to be entered. Now short
 		names within current zone can be used.
 
@@ -655,19 +655,19 @@ Fri Dec 20 2002 Yann Hirou (hirou@xname.org)
 
 	* correction of a security issue discovered by Matthias Keller <matti@keller.com>,
 		allowing anyone with a valid account to dig any xname-hosted zone.
-		
+
 Tue Nov 19 2002 Yann Hirou (hirou@xname.org)
 
-	* log timestamp bug correction in bin/delete.pl, bin/generate.pl. 12:02:09 
+	* log timestamp bug correction in bin/delete.pl, bin/generate.pl. 12:02:09
 		was logged as 12:2:9
-		
+
 	* use of sshhost for servers, as ssh connection might be done on a different
 		IP address than the listening named.
 
 	* corrections of bugs in bin/getremotelogs.pl, preventing logs to be inserted.
-		directory of retrieved logs missing, insert serverid in DB, wrong 
+		directory of retrieved logs missing, insert serverid in DB, wrong
 		column name in DB query corrected.
-	
+
 	* use of a scheduler for xname module.
 
 Mon Nov 18 2002 Yann Hirou (hirou@xname.org)
@@ -676,8 +676,8 @@ Mon Nov 18 2002 Yann Hirou (hirou@xname.org)
 
 	* creation of CONTRIBUTORS file for beta release.
 
-	* Add of backend.php. It is used for wmXName info retrieval - or any other 
-		not-already developped tool. It's a simple backend script, taking 
+	* Add of backend.php. It is used for wmXName info retrieval - or any other
+		not-already developped tool. It's a simple backend script, taking
 		login & password as param.
 
 Wed Nov 13 2002 Yann Hirou (hirou@xname.org)
@@ -690,7 +690,7 @@ Wed Nov 13 2002 Yann Hirou (hirou@xname.org)
 Mon Nov 11 2002 Yann Hirou (hirou@xname.org)
 
 	* adding all server in allow-transfer list, either on local and remote servers.
-	
+
 	* xname-module: use DBI; has been moved to config.pl, and commented. Otherwise, if DBI
 		not present, even if in a conditional block, perl complaints.
 
@@ -711,7 +711,7 @@ Wed Nov 6 2002 Yann Hirou (hirou@xname.org)
 
 	* servername added for each line in zone log view.
 
-	
+
 Tue Nov 5 2002 Yann Hirou (hirou@xname.org)
 
 	* Correction for insertlogs.pl in deleteOldLogs function. Might solve
@@ -719,20 +719,20 @@ Tue Nov 5 2002 Yann Hirou (hirou@xname.org)
 
 	* zoneLogDelete() function added in php scripts. Removes all logs
 		for current zone. logwindow.php modified to allow log deletion.
-	
+
 	* zonelog() modified to include date in zone logs output.
 
 
 Mon Nov 4 2002 Yann Hirou (hirou@xname.org)
 
-	* Bugfixes preventing multi-server to work properly 
+	* Bugfixes preventing multi-server to work properly
 
 
 Thu Oct 31 2002 Yann Hirou (hirou@xname.org)
 
 	* Bug in SQL request in pushtoservers.pl script corrected.
 
-	
+
 Mon Oct 28 2002 Yann Hirou (hirou@xname.org)
 
 	* minor bug corrections regarding logs and multiservers:
@@ -751,7 +751,7 @@ Tue Sep 24 2002 Yann Hirou (hirou@xname.org)
 
 Mon Sep 23 2002 Yann Hirou (hirou@xname.org)
 
-	* in perl scripts, logtimestamp function added in xname.inc, to enable 
+	* in perl scripts, logtimestamp function added in xname.inc, to enable
 		logging timestamp in all logs output. bug 30 corrected.
 
 
@@ -759,42 +759,42 @@ Thu Sep 19 2002 Yann Hirou (hirou@xname.org)
 
 	* use of checkZone instead of checkDomain in createzone.php
 
-	* in primary.php, bad query to check CNAME unicity corrected, 
-		and bug 43 resolved: IP address can no more be used in 
+	* in primary.php, bad query to check CNAME unicity corrected,
+		and bug 43 resolved: IP address can no more be used in
 		CNAME A record field.
 
-	* in primary.php, error in generateConfigFile function, $this->cname[...] 
+	* in primary.php, error in generateConfigFile function, $this->cname[...]
 		used instead of $this->cnamettl[...] corrected.
 
 	* in xname.php, checkdomain modified to check for non alphabetic char at the end of
 		zone name - to avoid IP addresses & numeric TLD. (bug 35)
-	
+
 	* in xname.php, CheckDomain rolled back, checkZone created - because of abusive use of
 		checkdomain somewhere else, and border effects.
-	
-		
+
+
 Thu Aug 29 2002 Yann Hirou (hirou@xname.org)
 
 	* ttl are used for each record if ttl != default. Difference has been made
 		between minimum and default ttl (bug 17).
 
 	* SOA param can be modified.
-	
+
 	* RetrieveRecords and RetrieveMultiRecords modified: array added, for
 		ttl retrieval.
-	
+
 
 Wed Aug 28 2002 Yann Hirou (hirou@xname.org)
 
 	* Creation of RULES file, containing rules for coding XName soft.
-	
+
 	* Enable possibility for users to switch between normal and advanced
-		intervace without changing their prefs. added a check on 
+		intervace without changing their prefs. added a check on
 		$advanced param. If not present, use $user->advanced (in modify.php)
-	
+
 
 Tue Aug 27 2002 Yann Hirou (hirou@xname.org)
-	
+
 	* AZONE suppressed from DB, replaced by an A record for the zone itself
 		(bug 39).
 
@@ -824,7 +824,7 @@ Mon Aug 26 2002 Yann Hirou (hirou@xname.org)
 
 	* add of a scheduler daemon for all perl scripts on master server
 
-	* doc/dynamic-update.txt added. very little doc on dynamic updates, with client 
+	* doc/dynamic-update.txt added. very little doc on dynamic updates, with client
 		script samples.
 
 
@@ -839,14 +839,14 @@ Fri Aug 23 2002 Yann Hirou (hirou@xname.org)
 
 	* $config->multiserver added, and matching code added in libs/zone.php
 		to insert new zones in dns_zonetoserver.
-	
-	
+
+
 Wed Aug 21 2002 Yann Hirou (hirou@xname.org)
 
 	* getremotelogs.pl created. Script to retrieve and insert logs from
 		remote servers.
 
-	* xname-module/bin/cleanlogs.pl : $SERVER_PATH_TO_INPUT/logpush.txt is used 
+	* xname-module/bin/cleanlogs.pl : $SERVER_PATH_TO_INPUT/logpush.txt is used
 		instead of specific directory.
 		Only one directory is now used on remote server.
 
@@ -854,25 +854,25 @@ Wed Aug 21 2002 Yann Hirou (hirou@xname.org)
 
 	* doc/scheduler.txt created. Doc explaining how and when to use bin/scheduler.pl
 
-		
+
 Mon Aug 19 2002 Yann Hirou (hirou@xname.org)
 
 	* in xname.php checkEmail corrected. It could not work, due to a variable name error.
 
 	* BugID 9 corrected: zone creation generates a log line, with status 'I'.
 
-	
+
 Fri Aug 9 2002 Yann Hirou (hirou@xname.org)
-	
+
 	* bug 9 closed. Logs are deleted only if older than a configurable nb of hours
 		and if after deletion a minimum amount of logs is kept.
-	
+
 	* bug 31 corrected. insertlogs.pl patterns moved to config.pl.
 
 	* cleanlogs.pl added in xname-module, to prepare logs for retrieval by
 		main server. few config params added in config.pl.
 
-	
+
 Thu Aug 8 2002 Yann Hirou (hirou@xname.org)
 
 	* $NAMED_TMP_DIR and $CP_COMMAND added for backuping named.conf
@@ -883,13 +883,13 @@ Thu Aug 8 2002 Yann Hirou (hirou@xname.org)
 
 	* add of sshport in dns_server for each server, in case of a non-standard port
 		for ssh on remote server.
-		
-		
+
+
 Wed Aug 7 2002 Georges Toth (g.toth@e-biz.lu)
 
 	* use -> variables instead hardcoded ones in primary.php
-	
-	
+
+
 Tue Aug 6 2002 Georges Toth (g.toth@e-biz.lu)
 
 	* generate random password, and update pasword in DB
@@ -898,7 +898,7 @@ Tue Aug 6 2002 Georges Toth (g.toth@e-biz.lu)
 
 	* better randomid generation
 
-	
+
 Tue Aug 6 2002 Yann Hirou (hirou@xname.org)
 
 	* Multi-server added, with generation of command files for each server.
@@ -923,7 +923,7 @@ Mon Aug 5 2002 Yann Hirou (hirou@xname.org)
 		file generation in generate.pl modified, rndc use optimized.
 
 	* $db and $config are globals.
-	
+
 
 Fri Aug 02 2002 Yann Hirou (hirou@xname.org) / Georges Toth (g.toth@e-biz.lu)
 
@@ -933,7 +933,7 @@ Fri Aug 02 2002 Yann Hirou (hirou@xname.org) / Georges Toth (g.toth@e-biz.lu)
 
 	* User class constructor modified - $config added as parameter
 
-	* function timestampToDate added. Returns epoch timestamp 
+	* function timestampToDate added. Returns epoch timestamp
 		formated into YYYYMMDDHHmmss. Used for userlogs purge.
 
 	* function checkEmail in libs/xname.php changed
@@ -971,7 +971,7 @@ Fri Jul 19 2002 Yann Hirou (hirou@xname.org)
 	* logwindow.php and digwindow.php bug corrected, preventing correct
 		working with register_globals=on
 		bug reported by Georges Toth (g.toth@e-biz.lu)
-	
+
 	* createuser.php bug corrected (syntax error)
 		bug reported by Georges Toth (g.toth@e-biz.lu)
 
@@ -983,20 +983,20 @@ Tue Jul 16 2002 Yann Hirou (hirou@xname.org)
 
 	* logout bug corrected - idsession was not deleted from dns_session
 		and use of "back" button worked.
-		
+
 	* integration of patch for register_globals=Off, for php 4.1.0 and upper.
 	  modified to permit register_globals on or off.
-	  
+
 	* $config->tousersource - email address used as From: in all
 		to-user emails, instead of $config->emailfrom and $config->contactemail
 		bug reported by Simon Kramer (simon@krameronline.ch)
-		
+
 	* perl script config variables regrouped in one config file
 		config.pl. All binaries paths are configurable
-		
+
 	* binaries in PHP scripts are all configurable through libs/config.php
 		config->bindig $config->binhost and $config->binnamedcheckzone
-		
+
 	* backend added - html/backend.php provides basic info for wmXName
 		or other desktop tools: nbZones, nbInfo, nbWarning, nbError for
 		given user.
@@ -1018,7 +1018,7 @@ Version 2.0.3
 -------------
 
 Wed Jun 12 2002 Yann Hirou (hirou@xname.org)
-	
+
 	* delete zone files when deleting zone
 		(modified in html/deletezone.php and bin/delete.pl)
 

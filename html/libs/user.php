@@ -3,10 +3,10 @@
 /*
   This file is part of XName.org project
   See  http://www.xname.org/ for details
-  
+
   License: GPLv2
   See LICENSE file, or http://www.gnu.org/copyleft/gpl.html
-  
+
   Author(s): Yann Hirou <hirou@xname.org>
 
 */
@@ -123,7 +123,7 @@ class User extends Auth {
     }
   }
 
-// Function changeOptions()  
+// Function changeOptions()
         /**
          * change $this->options content with existing variables
          *
@@ -135,43 +135,43 @@ class User extends Auth {
     // replace params in $this->options
     if(preg_match("/advanced=/",$this->options)){
       $this->options = preg_replace("/advanced=[^;]*;/i",
-        "advanced=" . $this->advanced . ";",$this->options);  
+        "advanced=" . $this->advanced . ";",$this->options);
     }else{
       $this->options .= "advanced=" . $this->advanced . ";";
     }
     if(preg_match("/ipv6=/",$this->options)){
       $this->options = preg_replace("/ipv6=[^;]*;/i",
-        "ipv6=" . $this->ipv6 . ";",$this->options);  
+        "ipv6=" . $this->ipv6 . ";",$this->options);
     }else{
       $this->options .= "ipv6=" . $this->ipv6 . ";";
     }
     if(preg_match("/txtrecords=/",$this->options)){
       $this->options = preg_replace("/txtrecords=[^;]*;/i",
-        "txtrecords=" . $this->txtrecords . ";",$this->options);  
+        "txtrecords=" . $this->txtrecords . ";",$this->options);
     }else{
       $this->options .= "txtrecords=" . $this->txtrecords . ";";
     }
     if(preg_match("/srvrecords=/",$this->options)){
       $this->options = preg_replace("/srvrecords=[^;]*;/i",
-        "srvrecords=" . $this->srvrecords . ";",$this->options);  
+        "srvrecords=" . $this->srvrecords . ";",$this->options);
     }else{
       $this->options .= "srvrecords=" . $this->srvrecords . ";";
     }
     if(preg_match("/caarecords=/",$this->options)){
       $this->options = preg_replace("/caarecords=[^;]*;/i",
-        "caarecords=" . $this->caarecords . ";",$this->options);  
+        "caarecords=" . $this->caarecords . ";",$this->options);
     }else{
       $this->options .= "caarecords=" . $this->caarecords . ";";
     }
     if(preg_match("/emailsoa=/",$this->options)){
       $this->options = preg_replace("/emailsoa=[^;]*;/i",
-        "emailsoa=" . $this->emailsoa . ";",$this->options);  
+        "emailsoa=" . $this->emailsoa . ";",$this->options);
     }else{
       $this->options .= "emailsoa=" . $this->emailsoa . ";";
     }
     if(preg_match("/nbrows=/",$this->options)){
       $this->options = preg_replace("/nbrows=[^;]*;/i",
-        "nbrows=" . $this->nbrows . ";",$this->options);  
+        "nbrows=" . $this->nbrows . ";",$this->options);
     }else{
       $this->options .= "nbrows=" . $this->nbrows . ";";
     }
@@ -185,11 +185,11 @@ class User extends Auth {
                 if(preg_match("/[\\\'\/\*]/", $this->options)){
                         $this->error="Illegal char";
                         return 0;
-                }else{          
+                }else{
                         return $this->updateOptions();
                 }
 }
-  
+
 
 //      Function generateIDSession ()
         /**
@@ -202,7 +202,7 @@ class User extends Auth {
                 global $db,$l;
                 $this->error="";
                 $result = randomID();
-                
+
                 // check if id already in DB or not
                 $query = "SELECT count(*) FROM dns_session
                 WHERE sessionID='" . $result . "'";
@@ -217,7 +217,7 @@ class User extends Auth {
                 }
                 return $result;
         }
-        
+
 
   // ********************************************************
 
@@ -231,7 +231,7 @@ class User extends Auth {
    */
   Function checkidsession($idsession){
     global $db,$l;
-    
+
     $query = "SELECT userid,date FROM dns_session
     WHERE sessionID='" . mysql_real_escape_string($idsession) . "'";
     $res = $db->query($query);
@@ -248,25 +248,25 @@ class User extends Auth {
       if(diffDate($date) > 30*60){
 
         // session expired
-        // delete session 
+        // delete session
         $query = "DELETE FROM dns_session WHERE sessionID='" .
         $idsession . "'";
         $db->query($query);
         $this->error=$l['str_session_expired'];
-        return 0;  
+        return 0;
       }
-      
+
       // update DB with new date
       $query = "UPDATE dns_session SET date=now()
       WHERE sessionID='" . $idsession . "'";
       $db->query($query);
-      
+
       $this->userid=$line[0];
       $this->idsession=$idsession;
     }else{ // date empty == no such id in DB
       $this->error=$l['str_session_expired'];
-      return 0;  
-    }  
+      return 0;
+    }
     return 1;
   }
 
@@ -277,7 +277,7 @@ class User extends Auth {
          *
          *@access public
          *@param string $idsession session ID to reset
-         *@return int 1 if success, 0 if error 
+         *@return int 1 if success, 0 if error
          */
         Function logout($idsession){
                 global $db,$l;
@@ -306,7 +306,7 @@ class User extends Auth {
    *
    *@access public
    *@return array array of all zones/zonestypes owned by user or 0 if error
-   */  
+   */
   Function listallzones($zone="", $template=0){
     global $db,$l;
     global $user;

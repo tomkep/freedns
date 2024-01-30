@@ -3,10 +3,10 @@
 /*
   This file is part of XName.org project
   See  http://www.xname.org/ for details
-  
+
   License: GPLv2
   See LICENSE file, or http://www.gnu.org/copyleft/gpl.html
-  
+
   Author(s): Yann Hirou <hirou@xname.org>
 
 */
@@ -24,7 +24,7 @@ class Userlogs {
   var $error;
   var $groupid;
   var $userid;
-  
+
   /**
    * Class constructor
    *
@@ -37,9 +37,9 @@ class Userlogs {
     $this->groupid=$groupid;
     $this->userid=$userid;
   }
-  
 
-// Function addLogs($zoneid,$text)  
+
+// Function addLogs($zoneid,$text)
   /**
    * Insert logs in DB
    *
@@ -63,15 +63,15 @@ class Userlogs {
       return 1;
     }
   }
-  
-  
+
+
 // Function showGroupLogs($category,$order){
   /**
    * Returns logs for current group
    *
    *@access public
    *@param string $category category for order by
-   *@param string $order order for result - [A]sc or [D]esc   
+   *@param string $order order for result - [A]sc or [D]esc
    *@return array list of logs (id/date/userid/zoneid/content)
    */
   Function showGroupLogs($category,$order){
@@ -83,7 +83,7 @@ class Userlogs {
       $order='ASC';
     }
     $query = "SELECT id,date,userid,zoneid,content FROM dns_userlog
-    WHERE groupid='" . $this->groupid . "' ORDER BY " . $category . 
+    WHERE groupid='" . $this->groupid . "' ORDER BY " . $category .
     " " . $order;
 
     $res=$db->query($query);
@@ -98,7 +98,7 @@ class Userlogs {
       return $result;
     }
   }
-  
+
 
 
 // Function showUserLogs($userid,$order){
@@ -133,7 +133,7 @@ class Userlogs {
       return $result;
     }
   }
-  
+
 
 // Function showZoneLogs($zoneid,$order){
   /**
@@ -143,7 +143,7 @@ class Userlogs {
    *@param int $zoneid ID of zone to retrieve logs for
    *@param string $order order for result - [A]sc or [D]esc
    *@return array list of logs (id/date/userid/content)
-   */  
+   */
   Function showZoneLogs($zoneid,$order){
     global $db,$l;
     $this->error="";
@@ -192,8 +192,8 @@ class Userlogs {
       return 1;
     }
   }
-  
-  
+
+
 // Function deleteLogsBefore($date)
   /**
    * Delete all logs before given date
@@ -206,7 +206,7 @@ class Userlogs {
     global $db,$l;
     $this->error="";
     $query = "DELETE FROM dns_userlog
-        WHERE groupid='" . $this->groupid . "' 
+        WHERE groupid='" . $this->groupid . "'
         AND date < '" . mysql_real_escape_string($date) . "'";
     $res = $db->query($query);
     if($db->error()){
@@ -214,6 +214,6 @@ class Userlogs {
       return 0;
     }else{
       return 1;
-    }  
+    }
   }
 }

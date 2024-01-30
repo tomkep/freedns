@@ -2,21 +2,21 @@
 /*
   This file is part of XName.org project
   See  http://www.xname.org/ for details
-  
+
   License: GPLv2
   See LICENSE file, or http://www.gnu.org/copyleft/gpl.html
-  
+
   Author(s): Yann Hirou <hirou@xname.org>
 
 */
 
 // create a new zone
-// parameters : 
+// parameters :
 // - void
 // - zonenamenew zonetypenew
 
 $page_title = "str_create_new_zone";
-// headers 
+// headers
 include 'includes/header.php';
 
 if(file_exists("includes/left_side.php")) {
@@ -34,10 +34,10 @@ if($user->authenticated == 0){
 }else if ($user->authenticated >= 2) {
   $content = migrationbox();
 }else{
-  if($config->usergroups && ($usergrouprights == 'R')){ 
+  if($config->usergroups && ($usergrouprights == 'R')){
     // if usergroups, zone is owned by
     // group and current user has no creation rights
-    $content = sprintf($html->string_error,  
+    $content = sprintf($html->string_error,
         $l['str_not_allowed_by_group_admin_to_create_write_zones']);
   }else{
 
@@ -79,7 +79,7 @@ endif;
       $content = "";
       $localerror = 0;
       $missing = "";
-    
+
       if(empty($zonenamenew)){
         $missing .= " " . $l['str_zone'] . ",";
       }
@@ -92,7 +92,7 @@ endif;
             $missing .= " " . $l['str_authoritative_server'] . ",";
           }elseif (!checkIP($authoritative)){
             $missing .= " " . $l['str_secondary_your_primary_should_be_an_ip'] . ",";
-          } 
+          }
         } else {
           // we take all from template
           $authoritative = "";
@@ -106,7 +106,7 @@ endif;
               $missing)
             ) . '<br>';
       }
-  
+
       if ($zonetypenew == "S") {
         $server = $authoritative;
       }
@@ -114,7 +114,7 @@ endif;
         $server = $serverimport;
       }
       if (empty($template)) $template = $l['str_none'];
-  
+
       if(!$localerror){
         if(!checkZone($zonenamenew)){
           $localerror = 1;
@@ -133,7 +133,7 @@ endif;
             $zonenamenew = $newzonename[1];
           }
           $newzone = new Zone('','');
-          if($config->usergroups){ 
+          if($config->usergroups){
             // if usergroups, zone is owned by
             // group and not individuals
             $list = $newzone->subExists($zonenamenew,$group->groupid);
@@ -146,23 +146,23 @@ endif;
           }else{
             if(count($list) != 0){
               if(count($list) == 1){
-                $toprint =  $l['str_zone_linked_exists_and_not_manageable'] . 
+                $toprint =  $l['str_zone_linked_exists_and_not_manageable'] .
                 '<br> ';
               }else{
-                $toprint = $l['str_zones_linked_exist_and_not_manageable']  . 
+                $toprint = $l['str_zones_linked_exist_and_not_manageable']  .
                 '<br> ';
               }
               if (count($list) < 10) {
-              $toprint .= implode("<br>",$list) .'<br>'; 
+              $toprint .= implode("<br>",$list) .'<br>';
               }
               $content .= sprintf($html->string_error,
-                  $toprint) . '<br>'; 
+                  $toprint) . '<br>';
               $localerror = 1;
             }
           }
         }
       } // end no error after empty checks
-  
+
 
 
       if(!$localerror){
@@ -173,16 +173,16 @@ endif;
         if(!empty($serverimport)){
             // check if server is IP or NS name
             if(!(checkIP($serverimport) || checkDomain($serverimport)) ){
-              $content .= sprintf($html->string_warning, 
+              $content .= sprintf($html->string_warning,
                 $l['str_bad_serverimport_name']);
               $server="";
-            } 
+            }
         }
 if (0):
         if(!empty($zonearea)){
           if(strcmp($zonetypenew, 'P')){
-            $content .= sprintf($html->string_warning, 
-              $l['str_no_zonearea']); 
+            $content .= sprintf($html->string_warning,
+              $l['str_no_zonearea']);
             $zonearea="";
           }
         }
@@ -200,15 +200,15 @@ endif;
                   sprintf($l['str_creation_of_x_x'],
                     $zonenamenew,$zonetypenew));
                 if($userlogs->error){
-                  $content .= sprintf($html->string_error, 
+                  $content .= sprintf($html->string_error,
                         sprintf($l['str_logging_action_x'],
                         $userlogs->error)
-                      ); 
+                      );
                 }
               }
             }
           }else{ // user is read only
-            $content .= sprintf($html->string_error, 
+            $content .= sprintf($html->string_error,
                   $l['str_not_allowed_by_group_admin_to_create_write_zones']);
             $localerror=1;
           }
@@ -222,38 +222,38 @@ endif;
           }
         }else{
           if($template && $template!=$l['str_none']){
-            $content .= '<p>' . 
+            $content .= '<p>' .
                 sprintf($l['str_using_zone_x_as_template'], $template);
             if($newzone->error){
-              $content .= "<p>" . 
-                  sprintf($html->string_warning, 
+              $content .= "<p>" .
+                  sprintf($html->string_warning,
                   $l['str_errors_occured_during_tmpl_usage_check_content']);
             }
           }
           // send email & print message
           $content .= '<p>' .
             sprintf($l['str_zone_x_successfully_registered_on_x_server'],
-               $zonenamenew,$config->sitename) . '<p > 
+               $zonenamenew,$config->sitename) . '<p >
           ';
           if($template && $template!=$l['str_none']){
             $content .=
               sprintf($l['str_you_can_now_use_the_x_modif_interface_x_to_configure'],
-                  '<a href="modify.php' . $link . 
+                  '<a href="modify.php' . $link .
                 '&amp;zonename=' . $zonenamenew . '&amp;zonetype=' .
                 $zonetypenew .'">','</a>');
           }else{
             $content .=
               sprintf($l['str_you_can_now_use_the_x_modif_interface_x_to_verify'],
-                  '<a href="modify.php' . $link . 
+                  '<a href="modify.php' . $link .
                 '&amp;zonename=' . $zonenamenew . '&amp;zonetype=' .
                 $zonetypenew .'">','</a>');
           }
-        } // zone created successfully  
-  
+        } // zone created successfully
+
       }else{ // error, print form again
         include("includes/createzone_form.php");
       }
-  
+
 
     } // end else $zonenamenew not null
 
@@ -261,11 +261,11 @@ endif;
       if($config->userlogs){
         // $usergrouprights was set in includes/login.php
         if(($usergrouprights == 'R') || ($usergrouprights =='W')){
-          $content .= '<p >' . 
-            sprintf($html->string_warning, 
+          $content .= '<p >' .
+            sprintf($html->string_warning,
               $l['str_as_member_of_group_action_logged']);
         }
-      }  
+      }
     }
   } // end usergroups && usergrouprights != R
 }

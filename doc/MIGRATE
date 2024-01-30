@@ -1,7 +1,7 @@
 To migrate from version 2.2.0 to 2.3.0
 ======================================
 - Backup all your files
-- Backup your SQL data in a file with mysqldump 
+- Backup your SQL data in a file with mysqldump
 - Replace old files with new ones
 - add missing vars from bin/config.default into
   bin/config.pl (all $DB_AUTH_* vars)
@@ -21,11 +21,11 @@ To migrate from version 2.1.0 to 2.2.0
   xname-engine don't use anymore an header file to generate
   the master named.conf file, but it generates a dedicated file
   that needs to be included in your main named.conf file.
-  So have a clean working named.conf file, and add similar line 
-  to the end of it (this filename is as $NAMED_CONF_ZONES 
+  So have a clean working named.conf file, and add similar line
+  to the end of it (this filename is as $NAMED_CONF_ZONES
   in bin/config.pl):
 include "xname-zones.conf";
-  then just put this working named.conf file into 
+  then just put this working named.conf file into
   /etc/bind/named.conf or somewhere else
   (to be configured in bin/config.pl as $NAMED_CONF).
 
@@ -34,7 +34,7 @@ Choose languages you want. Available are fr, pl, en.
 If you want to suppress some, delete following directories where
 [CC] is the two letters language code:
 
-	html/includes/strings/[CC] 
+	html/includes/strings/[CC]
 	bin/strings/[CC]
 
 
@@ -46,16 +46,16 @@ re-modify web interface:
 - edit html/libs/config.php
         change all items accordingly with your site configuration
 - edit localized files
-	index and disclaimer contents are now localized, and available in 
+	index and disclaimer contents are now localized, and available in
 		html/includes/strings/[CC]/index_content.php
 		html/includes/strings/[CC]/warranty.php
 	modify them to fit your needs.
-	
+
 Be careful, programs dig, host and named-checkzone have to be available from
 your web server. Paths are configurable in the html/libs/config.php file.
 
 If you want to use your own design instead of XName.org's one,
-simply change each html/*.php file, accordingly 
+simply change each html/*.php file, accordingly
 with html/libs/html.php where original functions where present.
 html/libs/html.php class & functions are used only in html/*.php files.
 

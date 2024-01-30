@@ -44,7 +44,7 @@ $LOG_PREFIX .=$str_log_pushtoservers_prefix{$SITE_DEFAULT_LANGUAGE};
 ########################################################################
 # STOP STOP STOP STOP STOP STOP STOP STOP STOP STOP STOP STOPS STOP STOP
 #
-# Do not edit anything below this line           
+# Do not edit anything below this line
 ########################################################################
 
 # list content of $REMOTE_SERVER_DIRS
@@ -58,7 +58,7 @@ $dbh = DBI->connect($dsn, $DB_USER, $DB_PASSWORD);
 
 open(LOG, ">>" . $LOG_FILE);
 
-opendir(DIR, $REMOTE_SERVER_DIR) ||  print LOG logtimestamp() . " " . $LOG_PREFIX . " : " . 
+opendir(DIR, $REMOTE_SERVER_DIR) ||  print LOG logtimestamp() . " " . $LOG_PREFIX . " : " .
 		sprintf($str_log_error_opening_x{$SITE_DEFAULT_LANGUAGE}, $REMOTE_SERVER_DIR) . "\n";
 @list=();
 while($item=readdir(DIR)){
@@ -79,9 +79,9 @@ foreach(@sortedlist){
 		$timestamp=$2;
 		if($ip eq $previousip){
 			# concatenate both files in newer
-			open(OLD,"< " . $REMOTE_SERVER_DIR . $previousfile) || print LOG logtimestamp() . " " . $LOG_PREFIX . " : " . sprintf($str_log_error_opening_x{$SITE_DEFAULT_LANGUAGE}, 
+			open(OLD,"< " . $REMOTE_SERVER_DIR . $previousfile) || print LOG logtimestamp() . " " . $LOG_PREFIX . " : " . sprintf($str_log_error_opening_x{$SITE_DEFAULT_LANGUAGE},
 			$REMOTE_SERVER_DIR . $previousfile) . "\n";
-			open(NEW,">> " . $REMOTE_SERVER_DIR . $file) || print LOG logtimestamp() . " " . $LOG_PREFIX . " : " . sprintf($str_log_error_opening_x{$SITE_DEFAULT_LANGUAGE},  
+			open(NEW,">> " . $REMOTE_SERVER_DIR . $file) || print LOG logtimestamp() . " " . $LOG_PREFIX . " : " . sprintf($str_log_error_opening_x{$SITE_DEFAULT_LANGUAGE},
 			$REMOTE_SERVER_DIR . $file) . "\n";
 			while(<OLD>){
 				print NEW $_;
@@ -90,7 +90,7 @@ foreach(@sortedlist){
 			close(NEW);
 			unlink($REMOTE_SERVER_DIR . $previousfile) || print LOG logtimestamp() . " " . $LOG_PREFIX
 			 . " : " . sprintf($str_log_error_deleting_x{$SITE_DEFAULT_LANGUAGE},
-						$REMOTE_SERVER_DIR . $previousfile) . "\n";		
+						$REMOTE_SERVER_DIR . $previousfile) . "\n";
 		}
 		$previousip = $ip;
 		$previousfile= $file;
@@ -103,25 +103,25 @@ foreach(values(%finalfilelist)){
 	$file =~ /^(.*)-.*$/;
 	$ip=$1;
 	# retrieve sshlogin
-	$query = "SELECT sshlogin, pathonremote, sshport FROM dns_server 
+	$query = "SELECT sshlogin, pathonremote, sshport FROM dns_server
 				WHERE sshhost='" . $ip . "'";
 	my $sth = dbexecute($query,$dbh,LOG);
 	$ref = $sth->fetchrow_hashref();
 	$sth->finish();
-	
-	$command = $SCP_COMMAND  . " -P " . $ref->{'sshport'} . " " . 
+
+	$command = $SCP_COMMAND  . " -P " . $ref->{'sshport'} . " " .
 				$REMOTE_SERVER_DIR . $file .
 				" " . $ref->{'sshlogin'} . "@" . $ip . ":" .
 				$ref->{'pathonremote'} . " 2>&1";
 	@output = `$command`;
 	if($#output>=0){
-		print LOG logtimestamp() . " " . $LOG_PREFIX . " " . 
+		print LOG logtimestamp() . " " . $LOG_PREFIX . " " .
 			sprintf($str_log_error_executing_x{$SITE_DEFAULT_LANGUAGE},$command) . ": \n";
 		foreach(@output){
 			print LOG logtimestamp() . " " . $LOG_PREFIX . "		" . $_;
 		}
 	}else{
 		unlink($REMOTE_SERVER_DIR . $file) || print LOG logtimestamp() . " " . $LOG_PREFIX
-		 . " : " . sprintf($str_log_error_deleting_x{$SITE_DEFAULT_LANGUAGE},$REMOTE_SERVER_DIR . $file). "\n";		
+		 . " : " . sprintf($str_log_error_deleting_x{$SITE_DEFAULT_LANGUAGE},$REMOTE_SERVER_DIR . $file). "\n";
 	}
 }

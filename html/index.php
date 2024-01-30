@@ -3,16 +3,16 @@
 /*
   This file is part of XName.org project
   See  http://www.xname.org/ for details
-  
+
   License: GPLv2
   See LICENSE file, or http://www.gnu.org/copyleft/gpl.html
-  
+
   Author(s): Yann Hirou <hirou@xname.org>
 
 */
 
 $page_title = "str_index_title";
-// headers 
+// headers
 include 'includes/header.php';
 
 if(file_exists("includes/left_side.php")) {
@@ -53,7 +53,7 @@ switch($what) {
   case "archive":
   case "thanks":
   case "migration":
-    $content = ${$what . "_content"}; 
+    $content = ${$what . "_content"};
 }
 print $html->box('mainbox',$title,$content);
 

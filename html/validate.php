@@ -2,19 +2,19 @@
 /*
   This file is part of XName.org project
   See  http://www.xname.org/ for details
-  
+
   License: GPLv2
   See LICENSE file, or http://www.gnu.org/copyleft/gpl.html
-  
+
   Author(s): Yann Hirou <hirou@xname.org>
 
 */
 
   // validate email address, using $id.
   // delete from  dns_waitingreply
-  
+
 $page_title="str_email_validation_title";
-// headers 
+// headers
 include 'includes/header.php';
 
 if(file_exists("includes/left_side.php")) {
@@ -28,13 +28,13 @@ if(file_exists("includes/left_side.php")) {
 
 $title = $l['str_email_validation_title'];
 
-if((isset($_REQUEST) && !empty($_REQUEST['id'])) || 
+if((isset($_REQUEST) && !empty($_REQUEST['id'])) ||
   (!isset($_REQUEST) && !empty($id))){
   if(isset($_REQUEST)){
     $id = $_REQUEST['id'];
   }
   if($user->validateIDEmail($id)){
-  
+
     $content = $l['str_email_flagged_valid'] . '<br>' .
     sprintf($l['str_you_can_now_use_the_x_main_interface_x_to_log_in'],
     '<a href="index.php?language=' . $lang . '">','</a>');

@@ -173,7 +173,7 @@ if (!$config->public) {
         $newuser->grouprights = 'A';
         $newuser->options = $options;
         $newuser->changeOptions();
-        // generate random ID 
+        // generate random ID
         $randomid= $newuser->generateIDEmail();
         // insert ID in DB
         if (!$newuser->storeIDEmail($newuser->userid, $email, $randomid)) {

@@ -630,7 +630,7 @@ class Primary extends Zone {
       while (isset($this->a[$counter])) {
         $deletecount++;
         $result .= '<tr>';
-        $result .= sprintf('<td>%s</td><td>%s</td>', 
+        $result .= sprintf('<td>%s</td><td>%s</td>',
             $this->a[$counter], $this->aip[$counter]);
         if ($advanced) {
           $result .= sprintf('<td>%s</td>', $this->PrintTTL($this->attl[$counter]));
@@ -2146,7 +2146,7 @@ class Primary extends Zone {
             if (! $this->checkPTRValue($ptrname[$i]) ) {
               $this->error = sprintf(
                 $l['str_primary_x_name_has_to_be_fully_qualified_x'],
-                xssafe($value), 
+                xssafe($value),
                 xssafe($ptrname[$i]));
             } else {
               // Check if record already exists
@@ -2403,7 +2403,7 @@ class Primary extends Zone {
                 $ttlval = $this->fixDNSTTL($ttl[$i]);
                 $query = "INSERT INTO dns_record (zoneid, type, val1, val2,ttl)
                   VALUES ('" . $this->zoneid . "', 'CNAME', '"
-                  . mysql_real_escape_string($value) . "', '" 
+                  . mysql_real_escape_string($value) . "', '"
                   . mysql_real_escape_string($cnamea[$i]) . "','" . $ttlval . "')";
                 $db->query($query);
                 if ($db->error()) {
@@ -2482,7 +2482,7 @@ class Primary extends Zone {
       $ttlval = $this->fixDNSTTL($ttl[$i]);
       $query = "INSERT INTO dns_record (zoneid, type, val1, val2,ttl)
         VALUES ('" . $this->zoneid . "', 'TXT', '"
-        . mysql_real_escape_string($value) . "', '" 
+        . mysql_real_escape_string($value) . "', '"
         . mysql_real_escape_string($newstring) . "','" . $ttlval . "')";
       $db->query($query);
       if ($db->error()) {
@@ -2753,7 +2753,7 @@ class Primary extends Zone {
                               $query = "INSERT INTO dns_record
                                 (zoneid,type,val1,val2,ttl)
                                 VALUES ('" . $this->zoneid . "',
-                                'SUBNS','" . mysql_real_escape_string($value) . "-" 
+                                'SUBNS','" . mysql_real_escape_string($value) . "-"
                                 . mysql_real_escape_string($delegateto[$i])
                                 . "','" . mysql_real_escape_string($nskey) . "','"
                                 . $this->fixDNSTTL($this->nsttl[$nskey]) . "')";
@@ -2778,7 +2778,7 @@ class Primary extends Zone {
                                 ('" . $this->zoneid . "',
                                 'CNAME', '" . $cnamecounter . "',
                                 '" . $cnamecounter . "."
-                                . mysql_real_escape_string($value) . "-" 
+                                . mysql_real_escape_string($value) . "-"
                                 . mysql_real_escape_string($delegateto[$i]) . "."
                                 . $this->zonename . ".',"
                                 . "'" . $ttlval . "')";
@@ -2826,8 +2826,8 @@ class Primary extends Zone {
     $result = "";
     while(list($key,$value) = each($srvname)) {
       if ($value != "") {
-        if (!$this->checkSRVName($value) 
-          || !$this->checkSRVPort($srvport[$i]) 
+        if (!$this->checkSRVName($value)
+          || !$this->checkSRVPort($srvport[$i])
           || !$this->checkSRVValue($srvvalue[$i])) {
           $this->error = sprintf(
             $l['str_primary_bad_srvname_x'],
@@ -2857,8 +2857,8 @@ class Primary extends Zone {
                 // Check if record already exists
                 $query = "SELECT count(*) FROM dns_record WHERE
                   zoneid='" . $this->zoneid . "' AND type='SRV'
-                  AND val1='" . mysql_real_escape_string($value) . "' 
-                  AND val4='" . mysql_real_escape_string($srvport[$i]) . "' 
+                  AND val1='" . mysql_real_escape_string($value) . "'
+                  AND val4='" . mysql_real_escape_string($srvport[$i]) . "'
                   AND val5='" . mysql_real_escape_string($srvvalue[$i]) ."'";
                 $res = $db->query($query);
                 $line = $db->fetch_row($res);
@@ -2868,11 +2868,11 @@ class Primary extends Zone {
                   $ttlval = $this->fixDNSTTL($ttl[$i]);
                   $query = "INSERT INTO dns_record (zoneid, type, val1, val2, val3,val4,val5,ttl)
                     VALUES ('" . $this->zoneid . "', 'SRV', '"
-                    . mysql_real_escape_string($value) . "', '" 
+                    . mysql_real_escape_string($value) . "', '"
                     . mysql_real_escape_string($srvpriority[$i]) . "','"
                     . mysql_real_escape_string($srvweight[$i]) . "','"
                     . mysql_real_escape_string($srvport[$i]) . "','"
-                    . mysql_real_escape_string($srvvalue[$i]) . "','" 
+                    . mysql_real_escape_string($srvvalue[$i]) . "','"
                     . $ttlval . "')";
                   $db->query($query);
                   if ($db->error()) {
@@ -2934,8 +2934,8 @@ class Primary extends Zone {
               // Check if record already exists
               $query = "SELECT count(*) FROM dns_record WHERE
                 zoneid='" . $this->zoneid . "' AND type='CAA'
-                AND val1='" . mysql_real_escape_string($value) . "' 
-                AND val3='" . mysql_real_escape_string($caatag[$i]) . "' 
+                AND val1='" . mysql_real_escape_string($value) . "'
+                AND val3='" . mysql_real_escape_string($caatag[$i]) . "'
                 AND val4='" . mysql_real_escape_string($caavalue[$i]) ."'";
               $res = $db->query($query);
               $line = $db->fetch_row($res);
@@ -2945,10 +2945,10 @@ class Primary extends Zone {
                 $ttlval = $this->fixDNSTTL($ttl[$i]);
                 $query = "INSERT INTO dns_record (zoneid, type, val1, val2, val3, val4, ttl)
                   VALUES ('" . $this->zoneid . "', 'CAA', '"
-                  . mysql_real_escape_string($value) . "', '" 
+                  . mysql_real_escape_string($value) . "', '"
                   . mysql_real_escape_string($caaflags[$i]) . "','"
                   . mysql_real_escape_string($caatag[$i]) . "','"
-                  . mysql_real_escape_string($caavalue[$i]) . "','" 
+                  . mysql_real_escape_string($caavalue[$i]) . "','"
                   . $ttlval . "')";
                 $db->query($query);
                 if ($db->error()) {
@@ -3438,7 +3438,7 @@ class Primary extends Zone {
         $rest = trim($rest);
         if (!preg_match('/"/', $rest)) {
           $restarr = str_split($rest, 255);
-          $rest = ""; 
+          $rest = "";
           foreach ($restarr as $v) {
             $rest .= "\"$v\" ";
           }
@@ -3711,9 +3711,9 @@ class Primary extends Zone {
     // no distinction between IPv4 and IPv6
     $string = strtolower($string);
     // only specified char
-    if ((strspn($string, "0123456789abcdefghijklmnopqrstuvwxyz-.") != strlen($string)) 
+    if ((strspn($string, "0123456789abcdefghijklmnopqrstuvwxyz-.") != strlen($string))
       || (strpos('0'.$string,".") == FALSE)
-      || (strpos('0'.$string,".") == 1) 
+      || (strpos('0'.$string,".") == 1)
       || !preg_match("/[a-z]\.$/i",$string)) {
       $result = 0;
     } else {

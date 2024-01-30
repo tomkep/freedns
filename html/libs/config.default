@@ -3,10 +3,10 @@
 /*
   This file is part of XName.org project
   See  http://www.xname.org/ for details
-  
+
   License: GPLv2
   See LICENSE file, or http://www.gnu.org/copyleft/gpl.html
-  
+
   Author(s): Yann Hirou <hirou@xname.org>
 
 */
@@ -44,7 +44,7 @@ Class Config {
     $this->dbpersistent = 1;
     // host & port needed for chrooted web server
     // without mysql unix socket access
-    // if using unix socket, put localhost and path to socket 
+    // if using unix socket, put localhost and path to socket
     // instead of port
     // for example: $this->dbport='/tmp/mysql.sock';
     $this->dbhost = 'localhost';
@@ -63,7 +63,7 @@ Class Config {
     // table name for user list
     // leave alone for XName DB use
     $this->userdbtable = 'dns_user';
-    // table fields for user 
+    // table fields for user
     $this->userdbfldid = 'id';
     $this->userdbfldgroupid = 'groupid';
     $this->userdbfldlogin = 'login';
@@ -108,9 +108,9 @@ Class Config {
     $this->userlogs=1;
     // if there are xname-modules on remote servers.
     $this->multiserver=1;
-    // enable advanced interface 
+    // enable advanced interface
     $this->advancedinterface=1;
-    // enable ipv6 interface 
+    // enable ipv6 interface
     $this->ipv6interface=1;
     // enable txt records
     $this->txtrecords=1;
@@ -125,7 +125,7 @@ Class Config {
 
     // blacklist for zones
     $this->blacklist = "/(127.in-addr.arpa)|(168.192.in-addr.arpa)/";
-    
+
     return $this;
   }
 }

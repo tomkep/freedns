@@ -1,13 +1,13 @@
                        XName dynamic update
-					   
-					   
+
+
 *** beta feature ***
 
 An XName feature is to allow dynamic updates. To do so, xmlrpc
 php library has to be installed on the server side, to run html/xmlrpc.php
 script.
 
-Each client wanting to change often it's IP address has to use 
+Each client wanting to change often it's IP address has to use
 an xmlrpc script, which will have to be executed after each IP change.
 
 =============================================================================
@@ -19,7 +19,7 @@ our xmlrpc server has been developed for phpxmlrpc libraries, available at
 phpxmlrpc.sourceforge.net. Unfortunately now PHP supports xmlrpc, but from
 xmlrpc-epi implementation (xmlrpc-epi.sourceforge.net).
 
-So if xmlrpc support is enabled in PHP, xmlrpc will not work. 
+So if xmlrpc support is enabled in PHP, xmlrpc will not work.
 
 Workaround is to disable xmlrpc support in PHP, and to use phpxmlrpc.
 
@@ -52,15 +52,15 @@ params = \
 server = "https://xname.whatever.com/xmlrpc.php"
 
 def usage():
-        print """xnameArec.py [-h|--help] 
-                [-u|--user       <user>] 
-                [-p|--password   <password>] 
-                [-z|--zone       <zone>] 
-                [-r|--recordname <record name>] 
-                [-o|--oldaddress <old address>] 
-                [-n|--newaddress <new address>] 
+        print """xnameArec.py [-h|--help]
+                [-u|--user       <user>]
+                [-p|--password   <password>]
+                [-z|--zone       <zone>]
+                [-r|--recordname <record name>]
+                [-o|--oldaddress <old address>]
+                [-n|--newaddress <new address>]
 		[-t|--ttl <ttl value>]
-                [-s|--server <xmlrpc server>] 
+                [-s|--server <xmlrpc server>]
 
 Inserts can be performed by leaving "oldaddress" empty.
 Deletes can be performed by leaving "newaddress" empty.
@@ -89,7 +89,7 @@ def main():
                         server = a
 		elif o in ("-t", "--ttl"):
 			params["ttl"] = a
-                else:   
+                else:
                         usage()
                         sys.exit()
 
@@ -143,7 +143,7 @@ if ($HTTP_POST_VARS["user"]!="") {
           htmlentities($r->serialize()). "</PRE><HR>\n";
   } else {
         print "Fault: ";
-        print "Code: " . $r->faultCode() . 
+        print "Code: " . $r->faultCode() .
           " Reason '" .$r->faultString()."'<BR>";
   }
 }
@@ -208,7 +208,7 @@ if ($HTTP_POST_VARS["user"]!="") {
           htmlentities($r->serialize()). "</PRE><HR>\n";
   } else {
         print "Fault: ";
-        print "Code: " . $r->faultCode() . 
+        print "Code: " . $r->faultCode() .
           " Reason '" .$r->faultString()."'<BR>";
   }
 }

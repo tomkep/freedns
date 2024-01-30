@@ -80,7 +80,7 @@ print $str_migrate_nbrows{$SITE_DEFAULT_LANGUAGE};
 
 # ######################################################
 
-# add lang column to dns_user 
+# add lang column to dns_user
 
 $query = " alter table dns_user add lang varchar(2) default 'en'";
 $sth = dbexecute($query,$dbh,LOG);

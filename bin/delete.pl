@@ -39,13 +39,13 @@ $LOG_PREFIX.=$str_log_delete_prefix{$SITE_DEFAULT_LANGUAGE};
 ########################################################################
 # STOP STOP STOP STOP STOP STOP STOP STOP STOP STOP STOP STOPS STOP STOP
 #
-# Do not edit anything below this line           
+# Do not edit anything below this line
 ########################################################################
 
 
 # Delete old users from DB
-# Table impacted : 
-# dns_waitingreply 
+# Table impacted :
+# dns_waitingreply
 # dns_user
 
 $dsn = "DBI:mysql:" . $DB_NAME . ";host=" . $DB_HOST . ";port=" . $DB_PORT;
@@ -72,17 +72,17 @@ $query = sprintf("SELECT w.%s as userid,u.%s as login
 		$timetouse,
 		$DB_AUTH_WAITING_USERID,
 		$DB_AUTH_FLD_ID,
-		$DB_AUTH_FLD_VALID);	
+		$DB_AUTH_FLD_VALID);
 
 my $sth = dbexecute($query,$dbhauth,LOG);
 while (my $ref = $sth->fetchrow_hashref()) {
-# for each user, 
+# for each user,
 	$userid = $ref->{'userid'};
-	print LOG logtimestamp() . " " . $LOG_PREFIX . " " . 
-		sprintf($str_log_deleting_user_x{$SITE_DEFAULT_LANGUAGE},$userid . " / " . $ref->{'login'}) . "\n";	
+	print LOG logtimestamp() . " " . $LOG_PREFIX . " " .
+		sprintf($str_log_deleting_user_x{$SITE_DEFAULT_LANGUAGE},$userid . " / " . $ref->{'login'}) . "\n";
 
-	# TODO send email to warn 
-	
+	# TODO send email to warn
+
 	# mark zones to be deleted !
 	$query = "UPDATE dns_zone set status='D' WHERE userid='" . $userid . "'";
 	my $sth2 = dbexecute($query,$dbh,LOG);
@@ -107,11 +107,11 @@ $query = "SELECT zone,zonetype
 
 @todelete=();
 while (my $ref = $sth->fetchrow_hashref()) {
-# for each zone, 
+# for each zone,
 	$zonename = $ref->{'zone'};
 	$zonetype = $ref->{'zonetype'};
-	print LOG logtimestamp() . " " . $LOG_PREFIX . " " . 
-			sprintf($str_log_deleting_zone_x{$SITE_DEFAULT_LANGUAGE},$zonename) . "\n";	
+	print LOG logtimestamp() . " " . $LOG_PREFIX . " " .
+			sprintf($str_log_deleting_zone_x{$SITE_DEFAULT_LANGUAGE},$zonename) . "\n";
 
 	# Delete $NAMED_DATA_DIR/masters|slaves
 	if($zonetype eq "P"){

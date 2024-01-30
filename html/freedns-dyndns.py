@@ -16,16 +16,16 @@ server = "https://freedns.42.pl/xmlrpc.php"
 
 def usage():
         print("""
-freedns-dyndns.py [-h|--help                      ] 
-                  [-u|--user       <user>         ] 
-                  [-p|--password   <password>     ] 
-                  [-z|--zone       <zone>         ] 
-                  [-r|--recordname <record name>  ] 
-                  [-o|--oldaddress <old address>  ] 
-                  [-n|--newaddress <new address>  ] 
-                  [-t|--ttl        <ttl>          ] 
+freedns-dyndns.py [-h|--help                      ]
+                  [-u|--user       <user>         ]
+                  [-p|--password   <password>     ]
+                  [-z|--zone       <zone>         ]
+                  [-r|--recordname <record name>  ]
+                  [-o|--oldaddress <old address>  ]
+                  [-n|--newaddress <new address>  ]
+                  [-t|--ttl        <ttl>          ]
                   [--updatereverse <1|0>          ]
-                  [-s|--server     <xmlrpc server>] 
+                  [-s|--server     <xmlrpc server>]
 
 Inserts can be performed by leaving "oldaddress" empty.
 Deletes can be performed by leaving "newaddress" empty.

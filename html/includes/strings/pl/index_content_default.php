@@ -7,7 +7,7 @@ $content = '
     <ul>
     <li> skopiuj libs/config.default jako libs/config.php</li>
     <li> popraw wszystkie pozycje w pliku libs/config.php</li>
-    <li> jeśli dostajesz błędy z mysql, sprawdź, czy użytkownik 
+    <li> jeśli dostajesz błędy z mysql, sprawdź, czy użytkownik
     skonfigurowany w config.php istnieje, a także czy nazwa bazy
     danych jest taka sama, jak ta w sql/creation.sql</li>
     <li> popraw tekst w pliku html/includes/strings/pl/index_content.php

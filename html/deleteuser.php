@@ -2,21 +2,21 @@
 /*
   This file is part of XName.org project
   See  http://www.xname.org/ for details
-  
+
   License: GPLv2
   See LICENSE file, or http://www.gnu.org/copyleft/gpl.html
-  
+
   Author(s): Yann Hirou <hirou@xname.org>
 
 */
 
 // delete user
-// parameters 
+// parameters
 // - void
 // - confirm
 
 $page_title = "str_delete_user_title";
-// headers 
+// headers
 include 'includes/header.php';
 
 if(file_exists("includes/left_side.php")) {
@@ -41,18 +41,18 @@ if($user->authenticated == 0){
     if($config->usergroups){
       if( $group->getGroupRights($user->userid) == 'A'){
         $content .= '<p>' . $l['str_administrator_delete_content'] . '</p>
-        
+
         <div class="boxheader">' . $l['str_zones_to_be_deleted']  . '</div>
         <p>' . $l['str_following_zones_will_be_deleted'] . '<br>
         <span class="warning">';
          $zonelist = $group->listallzones();
         while($otherzones= array_pop($zonelist)){
-          $content .= '&nbsp;' . $otherzones[0] . ' (' . 
+          $content .= '&nbsp;' . $otherzones[0] . ' (' .
             $otherzones[1] . ")<br>\n";
         }
-        
+
         $content .= '</span></p>
-        <div class="boxheader">' . $l['str_users_to_be_deleted'] . 
+        <div class="boxheader">' . $l['str_users_to_be_deleted'] .
           '</div>
           <p>' . sprintf($l['str_following_users_will_be_deleted_from_x'],
           $config->sitename) . ': </p><span class="warning">';
@@ -71,11 +71,11 @@ if($user->authenticated == 0){
       <p>' . $l['str_following_zones_will_be_deleted'] . '<br><span class="warning">';
        $zonelist = $user->listallzones();
       while($otherzones= array_pop($zonelist)){
-        $content .= '&nbsp;' . $otherzones[0] . ' (' . 
+        $content .= '&nbsp;' . $otherzones[0] . ' (' .
           $otherzones[1] . ")<br>\n";
       }
       $content .= "</span></p>";
-      
+
     } // end no user group
     $content .= '
       <div class="boxheader">' . $l['str_confirmation'] . '</div>
@@ -85,7 +85,7 @@ if($user->authenticated == 0){
       <form action="' .  $_SERVER["PHP_SELF"] . '" method="POST">
       ' . $hiddenfields . '
       <input type="hidden" name="confirm" value="1">
-      <input type="submit" class="submit" value="' . 
+      <input type="submit" class="submit" value="' .
         sprintf($l['str_yes_please_delete_myself_from_x'],
             $config->sitename) . '">
             </form>
@@ -94,10 +94,10 @@ if($user->authenticated == 0){
         <input type="submit" class="submit" value="' . $l['str_no_dont_delete'] .'"></form>
       </div>
       ';
-    
 
 
-    
+
+
   }else{ // $confirm = 1
     $content = "";
     $localerror = 0;
@@ -109,7 +109,7 @@ if($user->authenticated == 0){
       }else{
         $zonelist = $user->listallzones();
       }
-        
+
       while($otherzones= array_pop($zonelist)){
         $zone = new Zone($otherzones[0],$otherzones[1],$otherzones[2]);
         if($zone->zonetype == 'P'){
@@ -117,26 +117,26 @@ if($user->authenticated == 0){
         }else{
           $currenttype = $l['str_secondary'];
         }
-        $content .= sprintf($l['str_deleting_x_x_from_x'], 
+        $content .= sprintf($l['str_deleting_x_x_from_x'],
                 $zone->zonename, $currenttype,
                 $config->sitename) . '...<br>';
-        
+
         if(!$zone->zoneDelete()){
-          $content .= $zone->error . ' ' . 
+          $content .= $zone->error . ' ' .
                 $l['str_errors_occured_during_deletion_plz_try_again']
                 . '<br> ' .
                  sprintf($l['str_if_problem_persists_x_contact_us_x'],
-                '<a href="mailto:' . 
+                '<a href="mailto:' .
                 $config->contactemail . '">','</a>') .
                 '<p >';
           $localerror = 1;
         }else{
           $content .= $l['str_zone_successfully_deleted'] . '<p >';
-        } 
+        }
       } // end while zone
     } // end zones has to be deleted
 
-    
+
     // delete user
     // if group admin, delete grouplogs
     if(!$localerror){
@@ -149,11 +149,11 @@ if($user->authenticated == 0){
             // delete user logs
             $listuserlogs = $userlogs->showUserLogs($user->userid,'A');
             while($logid = array_pop($listuserlogs)){
-              $userlogs->deleteLog($logid[0]);      
+              $userlogs->deleteLog($logid[0]);
             }
           }// end not admin
         } // end if $config->userlogs
-  
+
         // delete group
         if($group->getGroupRights($user->userid) == 'A'){
           $userlist = $group->RetrieveGroupUsers();
@@ -164,7 +164,7 @@ if($user->authenticated == 0){
               $otheruser[1]) . "<br>";
             }else{
               $localerror = 1;
-              $content .= sprintf($html->string_error, 
+              $content .= sprintf($html->string_error,
                     sprintf($l['str_while_deleting_user_x'],
                     $otheruser[1]) . ": " .
                     $group->error) . "<br>";
@@ -172,14 +172,14 @@ if($user->authenticated == 0){
           }
         }
 
-        
+
       }else{ // end user groups
                                 // delete user logs
                                 if($config->userlogs){
                                         $userlogs->deleteLogsBefore(date("YmdHis"));
                                 }
                         }
-    
+
       // delete current user
       if($user->deleteuser()){
         $content .= $l['str_user_successfully_deleted'] . "<br>";
@@ -189,16 +189,16 @@ if($user->authenticated == 0){
               $l['str_while_deleting_your_user'])
               . "<br>";
       }
-      
+
       // current user has been deleted => logout
       $user->logout($user->idsession);
     } // end no error
 
     if($localerror){
-      $content .= "<p >" . 
+      $content .= "<p >" .
             $l['str_errors_occured_during_deletion_plz_refer_to_upper_msg'];
     }else{
-      $content .= '<p >' . 
+      $content .= '<p >' .
         sprintf($l['str_you_have_been_successfully_deleted_x_go_back_x'],
         '<a href="' . $config->mainurl . '">','</a>');
     }
@@ -213,5 +213,5 @@ if(file_exists("includes/right_side.php")) {
         include "includes/right_side_default.php";
 }
 
-print $html->footer();  
+print $html->footer();
 ?>

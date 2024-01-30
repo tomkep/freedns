@@ -7,9 +7,9 @@ Contact: freedns @ 42.pl
 
 =====================================================================
 
-XName is an engine providing modular web managed DNS hosting, with a 
+XName is an engine providing modular web managed DNS hosting, with a
 lot of features like DNS server logs viewer, synthetical view of all
-user's zones, and much more - for primary and secondary zones. 
+user's zones, and much more - for primary and secondary zones.
 
 Based on a MySQL database, PHP scripts for web front-end and
 Perl scripts for back-end - files creation and logs parsing, all
@@ -25,5 +25,5 @@ See doc/multiserver.txt for understanding how multiserver works.
 See doc/MULTISERVERS to enable multiservers.
 See doc/dynamic-update.txt for dynamic update feature.
 
-Source code is free (under GPL, see LICENSE file) 
+Source code is free (under GPL, see LICENSE file)
 

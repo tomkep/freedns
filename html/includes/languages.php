@@ -14,7 +14,7 @@ $content = '';
 reset($dirlist);
 while($countrycode = array_shift($dirlist)){
   $content .= '<a href="' . $_SERVER['PHP_SELF'] . $mylink .
-    'language=' . $countrycode . 
+    'language=' . $countrycode .
     '"><img src="images/' . $countrycode . '.png" alt="' . $countrycode . '"></a>
     ';
 }

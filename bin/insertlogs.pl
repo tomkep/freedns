@@ -41,7 +41,7 @@ $LOG_PREFIX.= $str_log_insertlogs_prefix{$SITE_DEFAULT_LANGUAGE};
 ########################################################################
 # STOP STOP STOP STOP STOP STOP STOP STOP STOP STOP STOP STOPS STOP STOP
 #
-# Do not edit anything below this line     
+# Do not edit anything below this line
 ########################################################################
 
 
@@ -54,7 +54,7 @@ $LOG_PREFIX.= $str_log_insertlogs_prefix{$SITE_DEFAULT_LANGUAGE};
 
 # TODO : manage case Secondary AND primary
 #   ==> must have a table with server & zone & type
-#     and parse logs on each server (no centralized 
+#     and parse logs on each server (no centralized
 #     management)
 
 # Current solution : print logs whenever primary or secondary
@@ -105,14 +105,14 @@ if(-e($SYSLOG_FILE)){
   }
   # if no line is read, don't save last read line !
   $readline = 0;
-  
+
   while(<FILE>){
     $line = $_;
     my $status;
     my $zonename;
     my $content;
     my $newcontent;
-    
+
     if (ord(substr($line,-1))!=10) {break;}
     $readline++;
      if(/$LOG_PATTERN_NAMED$/){
@@ -123,23 +123,23 @@ if(-e($SYSLOG_FILE)){
       } else {
         $content = $2;
       }
-  
+
       # split line
       my $timestamp = strftime("%Y-%m-%d %H:%M:%S", strptime($1));
-    
+
       # retrieve zonename...
       if($content =~ /$LOG_PATTERN_ZONE/){
         $zonename = $2;
       }else{
-    
+
         if($content =~ /$LOG_PATTERN_FILE/){
           $zonename = $2;
-        }else{  
-          #print LOG logtimestamp() . " " . $LOG_PREFIX . " : " . 
+        }else{
+          #print LOG logtimestamp() . " " . $LOG_PREFIX . " : " .
           #  $str_log_not_matching{$SITE_DEFAULT_LANGUAGE} . " : $content\n";
         }
       }
-    
+
       # status : Error, Warning, Information
       if ($LOG_USE_NAMED_SEVERITY) {
       $_ = $status;
@@ -154,7 +154,7 @@ if(-e($SYSLOG_FILE)){
           { "U" }
         };
       } else {
-  
+
         # remove zonename from matching words
         $newcontent=$content;
         $newcontent =~ s/$zonename/ /g;
@@ -167,14 +167,14 @@ if(-e($SYSLOG_FILE)){
             $status = 'W';
           }
         }
-      }  
+      }
       # insert in DB
-      # escape from mysql... 
+      # escape from mysql...
       $zonename =~ s/'/\\'/g;
       $content =~ s/'/\\'/g;
-      $zonename =~ s/"/\\"/g;    
+      $zonename =~ s/"/\\"/g;
       $content =~ s/"/\\"/g;
-    
+
       # select zoneid
       $query = "SELECT id FROM dns_zone WHERE zone='" . $zonename .
       "'";
@@ -187,19 +187,19 @@ if(-e($SYSLOG_FILE)){
         $sth = dbexecute($query,$dbh,LOG);
         $ref = $sth->fetchrow_hashref();
         if($ref->{'id'}){
-      
+
           $query = "INSERT INTO dns_log (zoneid, date, content, status)
-          VALUES ('" . $ref->{'id'} . "','" . $timestamp . "','" . $content . 
+          VALUES ('" . $ref->{'id'} . "','" . $timestamp . "','" . $content .
           "','" . $status . "')";
           $sth = dbexecute($query,$dbh,LOG);
         }
       }else{
         $query = "INSERT INTO dns_log (zoneid, date, content, status)
-        VALUES ('" . $ref->{'id'} . "','" . $timestamp . "','" . $content . 
+        VALUES ('" . $ref->{'id'} . "','" . $timestamp . "','" . $content .
         "','" . $status . "')";
         $sth = dbexecute($query,$dbh,LOG);
       }
-    
+
     }else{
   #    print "DONT MATCH : $_\n";
     }
@@ -253,21 +253,21 @@ sub deleteOldLogs(){
   while(my $ref = $sth->fetchrow_hashref()){
     $zoneid = $ref->{'zoneid'};
     $count = $ref->{'count'};
-  
+
     # count logs younger than $timestamp
     $query = "SELECT COUNT(*) AS count FROM dns_log
       WHERE date > NOW() - INTERVAL " . $nbhours . " HOUR
       AND zoneid='" . $zoneid . "'";
 
     my $sth2 = dbexecute($query,$dbh,LOG);
-  
+
     $ref2 = $sth2->fetchrow_hashref();
     $nb = $ref2->{'count'};
     $sth2->finish();
-    
+
     if($nb < $nblogs){
       # keep everyting until nblogs
-      # count total of logs 
+      # count total of logs
       # delete ascending until total - nblogs
       if($count > $nblogs){
         $nbtodelete = $count - $nblogs;
@@ -278,8 +278,8 @@ sub deleteOldLogs(){
         my $sth2 = dbexecute($query,$dbh,LOG);
         $sth2->finish();
       }
-      
-  
+
+
     }else{ # $nb >= $nblogs
       # more than $nblogs will be not deleted => ok to delete all
       # before timestamp
@@ -291,6 +291,6 @@ sub deleteOldLogs(){
     }
 
   } # end while zoneid
-  
+
 } # end deleteoldlogs
 

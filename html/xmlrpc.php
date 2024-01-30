@@ -39,7 +39,7 @@ $config = new Config();
  * - password: his password
  * - zone: the name of the zone
  * - name: the name of the A record(s)
- * - oldaddress (optional): the address of the A record to 
+ * - oldaddress (optional): the address of the A record to
  *                          delete or "*" to delete all A records
  *                          for the given name.
  * - newaddress (optional): the address of the A record to add.
@@ -99,7 +99,7 @@ function updateArecord($m) {
 
   if ((!$config->usergroups &&
         $zone->RetrieveUser() != $user->userid) ||
-        ($config->usergroups && 
+        ($config->usergroups &&
         $zone->RetrieveUser() != $group->groupid)) {
     return new xmlrpcresp(0, $xmlrpcerruser, "You can not manage zone ". $zone->zonename);
   }
@@ -152,7 +152,7 @@ function updateArecord($m) {
         $fn = "addARecord";
       $res = $currentzone->$fn(
             $zone->zoneid,
-            array(mysql_real_escape_string($req["newaddress"])), 
+            array(mysql_real_escape_string($req["newaddress"])),
             array(mysql_real_escape_string($req["name"])),
             array($ttl),
             $updatereverse);

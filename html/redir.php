@@ -15,14 +15,14 @@ array_shift($host);
 $siten = mysql_real_escape_string(implode(".", $host));
 $site = mysql_real_escape_string($site);
 
-$query = "SELECT val2,val4 
-FROM dns_zone z 
-JOIN dns_record r ON r.zoneid=z.id 
-WHERE type='WWW' 
+$query = "SELECT val2,val4
+FROM dns_zone z
+JOIN dns_record r ON r.zoneid=z.id
+WHERE type='WWW'
   AND ( val5 IS NULL OR val5 = '' )
-  AND (   (zone='$siten' AND (val1='$hostn' OR val1='$hostn.$siten.')) 
+  AND (   (zone='$siten' AND (val1='$hostn' OR val1='$hostn.$siten.'))
        OR (zone='$hostn.$siten' AND val1='$hostn.$siten.')
-       OR (concat(val1,'.',zone)='$site') 
+       OR (concat(val1,'.',zone)='$site')
        OR (val1='@' AND zone='$hostn.$siten')
        OR (val1='*' AND zone='$siten')
       )";
@@ -68,7 +68,7 @@ else
 </body>
 </noframes>
 </html>
-<? 
+<?
   }
 }
 ?>

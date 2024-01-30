@@ -2,10 +2,10 @@
 /*
  This file is part of XName.org project
  See http://www.xname.org/ for details
- 
+
  License: GPLv2
  See LICENSE file, or http://www.gnu.org/copyleft/gpl.html
- 
+
  Author(s): Yann Hirou <hirou@xname.org>
 
 */
@@ -26,7 +26,7 @@ Class Html{
  var $generic_warning = ' <span class="warning">%s</span>';
  var $string_error;
  var $string_warning;
- 
+
  /**
   * Class constructor
   *
@@ -43,7 +43,7 @@ Class Html{
   return 1;
  }
 
- 
+
 // function header($title)
 //  returns header with $title
  /**
@@ -70,10 +70,10 @@ Class Html{
 <body>
 <div id="container">
  ';
- 
+
   return $result;
  }
- 
+
 // function subheader($link)
 //  returns subheader with $link query-string added to all local URLs
 //  (used to pass sessionID)
@@ -120,14 +120,14 @@ Class Html{
   <a href="' . $config->mainurl . $link. '&what=archive" class="linkcolor">' .
   $l['str_html_archive'] . '</a> |
   <a href="' . $config->mainurl . $link. '&logout=1" class="linkcolor">' .
-  $l['str_logout'] . '</a>  
+  $l['str_logout'] . '</a>
   </div>
 </div>
   <!-- end header -->
   ';
   return $result;
  }
- 
+
 // function footer()
 //  returns footer
  /**
@@ -137,7 +137,7 @@ Class Html{
   *@return string HTML code
   */
  function footer(){
-  global $db; 
+  global $db;
   $result = '<div id="footer"> SQL:' . $db->totaltime . '</div>
   ';
   $result .= $this->footerlight();
@@ -157,7 +157,7 @@ Class Html{
   $result = "</div></body></html>";
   return $result;
  }
- 
+
 // function box($id,$title,$content)
 //  returns designed box with id, title & content
  /**
@@ -173,11 +173,11 @@ Class Html{
   $result = '
   <!-- box beginning "' . $id . '" -->
   <div id="' . $id . '">
-   <h2 id="' . $id . '_title"><span>' 
-    . $title . 
+   <h2 id="' . $id . '_title"><span>'
+    . $title .
    '</span></h2>
-   <div id="' . $id . '_content">' 
-    . $content . 
+   <div id="' . $id . '_content">'
+    . $content .
    '</div>
   </div>
   <!-- box end "' . $id . '" -->

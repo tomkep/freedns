@@ -3,10 +3,10 @@
 /*
   This file is part of XName.org project
   See  http://www.xname.org/ for details
-  
+
   License: GPLv2
   See LICENSE file, or http://www.gnu.org/copyleft/gpl.html
-  
+
   Author(s): Yann Hirou <hirou@xname.org>
 
 */
@@ -20,13 +20,13 @@
  *
  *@access public
  */
-class Zone { 
+class Zone {
   var $error;
   var $zonename;
   var $zonetype;
   var $userid;
   var $zoneid;
-  
+
   // instanciation
   // if $zonename or $idsession, match against DB
   // to log in. fill in $authenticated, generate $idsession
@@ -63,7 +63,7 @@ class Zone {
       }
     }
   }
-  
+
 // Function Exists($zonename,$zonetype)
 //     try to authenticate against primary or secondary
 //     internal use only
@@ -73,7 +73,7 @@ class Zone {
    *@access private
    *@param string $zonename name of zone
    *@param string $zonetype type of zone ('P'rimary or 'S'econdary)
-   *@return int 1 if true, 0 if false or error 
+   *@return int 1 if true, 0 if false or error
    */
   Function Exists($zonename,$zonetype){
     global $db,$l;
@@ -99,7 +99,7 @@ class Zone {
       return 1;
     }
   }
-  
+
 //  Function subExists($zonename,$userid)
 // check if zone is sub-zone of an existing one
 // or if there is already a sub zone of this one
@@ -134,7 +134,7 @@ class Zone {
       }else{
         $tocompare = $tld . "." . $tocompare;
       }
-      $query = "SELECT LOWER(zone) from dns_zone WHERE 
+      $query = "SELECT LOWER(zone) from dns_zone WHERE
       zone='" . mysql_real_escape_string($tocompare) . "' AND userid!='" . $userid . "'";
       if ($config->allowsubzones == 1)
         $query .= " AND zonetype = 'P'";
@@ -144,10 +144,10 @@ class Zone {
         return 0;
       }
       while($line = $db->fetch_row($res)){
-        array_push($list,$line[0]);      
+        array_push($list,$line[0]);
       }
     }
-    
+
     // already a sub zone of this one ?
     $query = "SELECT LOWER(zone) FROM dns_zone WHERE
     zone like '%." . $zonename . "' AND userid!='" . $userid . "'";
@@ -159,7 +159,7 @@ class Zone {
       return 0;
     }
     while($line = $db->fetch_row($res)){
-      array_push($list,$line[0]);      
+      array_push($list,$line[0]);
     }
 
     return $list;
@@ -179,7 +179,7 @@ class Zone {
     $this->error="";
     $zonename = mysql_real_escape_string($zonename);
     $zonetype = mysql_real_escape_string($zonetype);
-    $query = "SELECT id FROM dns_zone WHERE 
+    $query = "SELECT id FROM dns_zone WHERE
     zone='" . $zonename . "' AND zonetype='" . $zonetype . "'";
     $res = $db->query($query);
     $line = $db->fetch_row($res);
@@ -198,7 +198,7 @@ class Zone {
 
 // Function zoneCreate($zonename,$zonetype,$template,$serverimport,$userid,$zonearea)
   /**
-   * Insert new zone in dns_zone table 
+   * Insert new zone in dns_zone table
    *
    *@access public
    *@param string $zonename zone name
@@ -259,7 +259,7 @@ endif;
         // insert in dns_zonetoserver
         // if multiserver, insert for others
         // restrictions on servers should be written here
-            
+
         if (!empty($this->error)) {
           // argh! no rollback for myisam.
           $query = sprintf("DELETE FROM dns_zone WHERE zone='%s' AND zonetype='%s' AND userid='%s';",
@@ -270,7 +270,7 @@ endif;
           // insert creation log
           $query = "INSERT INTO dns_log (zoneid,content,status,serverid)
             VALUES ('" . $this->zoneid .
-            "','" . addslashes($l['str_zone_successfully_created']) . 
+            "','" . addslashes($l['str_zone_successfully_created']) .
             "','I','1')";
           $res = $db->query($query);
 
@@ -284,20 +284,20 @@ endif;
           }
           while($serverid=array_shift($serveridlist)){
             $query = "INSERT INTO dns_zonetoserver
-                (zoneid,serverid) 
-                 VALUES ('" . $this->zoneid . "','" . 
+                (zoneid,serverid)
+                 VALUES ('" . $this->zoneid . "','" .
                  $serverid . "')";
             $res2 = $db->query($query);
           }
           if ($zonetype=='P'){
-            $query = "INSERT INTO dns_confprimary 
+            $query = "INSERT INTO dns_confprimary
               (zoneid, serial, refresh, retry, expiry, minimum, defaultttl, xfer)
                VALUES ('" . $this->zoneid . "','" . getSerial() . "',
               '10800', '3600', '604800', '10800', '86400', 'any')";
             $res2 = $db->query($query);
             while($servername=array_shift($servernamelist)){
               $query = "INSERT INTO dns_record
-                (zoneid,type,val1) 
+                (zoneid,type,val1)
                 VALUES ('". $this->zoneid . "', 'NS', '" . $servername .".')";
               $res2 = $db->query($query);
             }
@@ -336,7 +336,7 @@ endif;
         $this->error=$l['str_zone_already_exists'];
       }
       return 0;
-    }  
+    }
   }
 
 
@@ -363,9 +363,9 @@ endif;
       array_push($todelete, 'dns_confsecondary');
     }
     reset($todelete);
-    
+
     while($item = array_pop($todelete)){
-      $query = "DELETE FROM " . $item . " WHERE 
+      $query = "DELETE FROM " . $item . " WHERE
       zoneid='" . $this->zoneid . "'";
       $db->query($query);
       if($db->error()){
@@ -373,7 +373,7 @@ endif;
         return 0;
       }
     }
-    $query = "UPDATE dns_zone SET status='D' WHERE 
+    $query = "UPDATE dns_zone SET status='D' WHERE
       id='" . $this->zoneid . "'";
     $res = $db->query($query);
     if($db->error()){
@@ -439,12 +439,12 @@ endif;
       return 0;
     }else{
       $query = "INSERT INTO dns_log (zoneid,content,status,serverid)
-          VALUES ('" . $this->zoneid . "','" . 
+          VALUES ('" . $this->zoneid . "','" .
             addslashes($l['str_zone_logs_purged']) . "','I','1')";
       $res = $db->query($query);
       return 1;
     }
-  }  
+  }
 
   /**
    * Returns status of zone: two letters of either I(nformation), W(arning), E(rror).
@@ -480,8 +480,8 @@ endif;
     return $last.'I';
   }
 
-  
-  
+
+
 //  Function RetrieveUser()
   /**
    * Retrieve user ID of zone owner
@@ -495,7 +495,7 @@ endif;
     if($this->userid != 0){
       return $this->userid;
     }
-    $query = "SELECT userid FROM dns_zone 
+    $query = "SELECT userid FROM dns_zone
     WHERE id='" . $this->zoneid . "'";
     $res=$db->query($query);
     $line=$db->fetch_row($res);
@@ -505,7 +505,7 @@ endif;
     }else{
       $this->userid=$line[0];
       return $this->userid;
-    }    
+    }
   }
   Function getUserIdByZone($zone){
     global $db,$l;
@@ -513,7 +513,7 @@ endif;
     if(empty($zone)) {
       return 0;
     }
-    $query = "SELECT userid FROM dns_zone 
+    $query = "SELECT userid FROM dns_zone
       WHERE zone='" . mysql_real_escape_string($zone) . "'";
     $res=$db->query($query);
     $line=$db->fetch_row($res);
@@ -561,7 +561,7 @@ endif;
             $this->_f($line[0]),
             $this->_f($line[1]));
           $res = $db->query($query);
-          if($db->error()){ 
+          if($db->error()){
             $this->error=$l['str_trouble_with_db'];
             return 0;
           }
@@ -591,7 +591,7 @@ endif;
             mysql_real_escape_string($line[5]),
             getSerial());
           $res = $db->query($query);
-          if($db->error()){ 
+          if($db->error()){
             $this->error=$l['str_trouble_with_db'];
             return 0;
           }
@@ -610,7 +610,7 @@ endif;
           while($line=$db->fetch_row($res)){
             array_push($listofrecords,$line);
           }
-          
+
           while($line=array_pop($listofrecords)){
             // NS - simple copy
             // MX - simple copy
@@ -619,7 +619,7 @@ endif;
             // WWW - if domain name itself, substitute
             // CNAME - simple copy
             // sub zones - simple copy
-            
+
             switch($line[0]){
               case "WWW":
                 $line[2] = ereg_replace($templatezone."/", $this->zonename."/", $line[2]);
@@ -648,12 +648,12 @@ endif;
               $this->_f($line[4]),
               $this->_f($line[5]),
               $this->_f($line[6]));
-            $db->query($query);        
+            $db->query($query);
             if($db->error()){
               $this->error =$l['str_trouble_with_db'];
               return 0;
             }
-          } // end while 
+          } // end while
         } // end no DB error
         break; // case 'P'
 
@@ -808,7 +808,7 @@ endif;
               return 0;
             }
           }
-        } // standard line 
+        } // standard line
       } // not ";" beginning line
     } // end foreach line of dig result
 
@@ -819,7 +819,7 @@ endif;
     return $dbqueries;
   }
 
-// *******************************************************  
+// *******************************************************
 //  Function flagModified($zoneid)
   /**
    * flag given zone as 'M'odified to be generated & reloaded
@@ -827,7 +827,7 @@ endif;
    *@access private
    *@param $zoneid int zone id
    *@return string result text
-   */  
+   */
   Function flagModified($zoneid){
     return $this->flagZoneStatus($zoneid, 'M');
   }
@@ -845,15 +845,15 @@ endif;
 
   Function flagZoneStatus($zoneid, $status='M'){
     global $db, $l;
-        
+
     $query = "UPDATE dns_zone SET status='$status' WHERE id='$zoneid'";
     $res = $db->query($query);
     $result = "";
     if($db->error()){
-      $result = '<p>' 
+      $result = '<p>'
         . sprintf($html->string_error, $l['str_trouble_with_db'])
         . ' '
-        . $l['str_primary_zone_error_not_available_try_again'] 
+        . $l['str_primary_zone_error_not_available_try_again']
         . '</p>';
     }
     return $result;
@@ -864,7 +864,7 @@ endif;
     if (empty($this->zoneid)) return 0;
     $query = "SELECT status FROM dns_zone WHERE id=" . $this->zoneid;
     $res = $db->query($query);
-    if ($db->error()) { 
+    if ($db->error()) {
       $this->error = $l['str_trouble_with_db'];
       return 1;
     }

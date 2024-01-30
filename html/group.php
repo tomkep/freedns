@@ -2,10 +2,10 @@
 /*
   This file is part of XName.org project
   See  http://www.xname.org/ for details
-  
+
   License: GPLv2
   See LICENSE file, or http://www.gnu.org/copyleft/gpl.html
-  
+
   Author(s): Yann Hirou <hirou@xname.org>
 
 */
@@ -16,7 +16,7 @@
 // - $loginnew,$passwordnew,$confirmpasswordnew,  $idsession
 
 $page_title="str_manage_your_users";
-// headers 
+// headers
 include 'includes/header.php';
 
 if(isset($_REQUEST) && isset($_REQUEST['loginnew'])){
@@ -66,13 +66,13 @@ if($config->usergroups){
   // main content
     $title=$l['str_manage_your_users'];
     if(!isset($action)){
-      $content = '<div class="boxheader">' . 
+      $content = '<div class="boxheader">' .
             $l['str_users_in_your_group'] . '</div>
              <p>';
       // print list of current user, with rights & delete box
       $listofgroupusers = $group->RetrieveGroupUsers();
       if($group->error){
-        $content = sprintf($html->string_error,$group->error) . ""; 
+        $content = sprintf($html->string_error,$group->error) . "";
       }else{
         switch(count($listofgroupusers)){
           case 0:
@@ -109,15 +109,15 @@ if($config->usergroups){
                 $usergrouprights = $group->getGroupRights($line[0]);
                 switch($usergrouprights){
                   case 'R':
-                    $content .= '<option value="R" selected>' . 
+                    $content .= '<option value="R" selected>' .
                           $l['str_read_access'] . '</option>';
-                    $content .= '<option value="W">' . 
+                    $content .= '<option value="W">' .
                           $l['str_write_access'] . '</option>';
                     break;
                   case 'W':
-                    $content .= '<option value="R">' . 
+                    $content .= '<option value="R">' .
                           $l['str_read_access'] . '</option>';
-                    $content .= '<option value="W" selected>' . 
+                    $content .= '<option value="W" selected>' .
                           $l['str_write_access'] . '</option>';
                     break;
                   case 'A':
@@ -167,7 +167,7 @@ if($config->usergroups){
         </table>
         </form>
         ';
-    
+
       } // end no $group->error
     }else{ // !isset($action)
       // $action is set.
@@ -178,73 +178,73 @@ if($config->usergroups){
       $missing = "";
       switch($action){
         case "usermodification":
-          
+
           // retrieve array of "userid"
           // retrieve array of "groupright"
           // retrieve array of "delete"
           $listofuserids = retrieveArgs("userid", $_POST);
           $listofgrouprights = retrieveArgs("groupright", $_POST);
           $listofdelete = retrieveArgs("delete", $_POST);
-        
+
           while($groupright = array_pop($listofgrouprights)){
             $usertochange = array_pop($listofuserids);
-            
+
             // update groupright for user $usertochange
             if(($groupright != 'R') && ($groupright != 'W')){
               $content .= sprintf($html->string_error,
-                    $l['str_wrong_group_rights']) . "<br>"; 
+                    $l['str_wrong_group_rights']) . "<br>";
             }else{
               // check if user in group
               if($group->isMember($usertochange)){
                 // set group right
                 if(!$group->setGroupRights($usertochange,$groupright)){
-                  $content .= sprintf($html->string_error, 
+                  $content .= sprintf($html->string_error,
                   sprintf($l['str_while_changing_group_rights_for_x'],
                   $user->RetrieveLogin($usertochange)) .
-                  ': ' . $group->error) . 
+                  ': ' . $group->error) .
                   '<br>';
                 }else{
-                  $content .= sprintf($l['str_rights_for_x_successfully_set_to_x'], 
+                  $content .= sprintf($l['str_rights_for_x_successfully_set_to_x'],
                   $user->RetrieveLogin($usertochange),$groupright) .
                   '<br>';
-                }              
+                }
               }else{
-                $content .= sprintf($html->string_error, 
+                $content .= sprintf($html->string_error,
                   sprintf($l['str_user_x_is_not_member_of_this_group'],
                     $user->RetrieveLogin($usertochange))
                   ) . '<br>';
               }
             }
           }
-        
+
           // Delete
           while($todelete = array_pop($listofdelete)){
             // delete user
-  
+
             // check if user in group
             $todelete = mysql_real_escape_string($todelete);
             if($group->isMember($user->userid) && $group->isMember($todelete)){
               // delete user
               $logintodelete=$user->RetrieveLogin($todelete);
               if(!$group->deleteUser($todelete)){
-                $content .= sprintf($html->string_error, 
+                $content .= sprintf($html->string_error,
                   sprintf($l['str_errors_occured_during_user_deletion_x'],
                     $logintodelete) . ': '
                   . $group->error) . '<br>';
-                
+
               }else{
                 $content .= sprintf($l['str_user_x_successfully_deleted'],
                   $logintodelete) . '<br>';
               }
             }else{
-              $content .= sprintf($html->string_error, 
+              $content .= sprintf($html->string_error,
                 sprintf($l['str_user_x_is_not_member_of_this_group'],
                   $user->RetrieveLogin($usertochange))
                 ) . '<br>';
             }
           }
-        
-          break;  // end case $action = usermodification  
+
+          break;  // end case $action = usermodification
 
         case "usercreation":
 
@@ -257,31 +257,31 @@ if($config->usergroups){
           if(empty($confirmpasswordnew)){
             $missing .= ' ' . $l['str_confirm_password'] . ',';
           }
-  
+
           if(!empty($missing)){
             $localerror = 1;
             $missing = substr($missing,0, -1);
-            $content .= sprintf($html->fontred, 
+            $content .= sprintf($html->fontred,
                   sprintf($l['str_error_missing_fields'],
                   $missing)
                 ) . '<br>';
           }
-    
-  
+
+
           if(!$localerror){
             if(!checkName($loginnew)){
               $localerror = 1;
-              $content .= sprintf($html->string_error, 
+              $content .= sprintf($html->string_error,
                     $l['str_bad_login_name']) . '<br>';
             }
-    
+
             if($passwordnew != $confirmpasswordnew){
               $localerror = 1;
-              $content .= sprintf($html->string_error, 
+              $content .= sprintf($html->string_error,
                     $l['str_passwords_dont_match']) . '<br>';
             }
           } // end no error after empty checks
-  
+
 
 
           if(!$localerror){
@@ -289,7 +289,7 @@ if($config->usergroups){
           // *            Create new user           *
           // ****************************************
             $newuser=new User('','','');
-          
+
             if ($newuser->Exists($loginnew))
             {
               $content.=sprintf($html->string_error,
@@ -299,18 +299,18 @@ if($config->usergroups){
                 $passwordnew,'',$user->userid, $grouprightsnew);
               if($group->error){
                 $content .= sprintf($html->string_error,
-                      $group->error); 
+                      $group->error);
               }else{
                 // user successfully created
                 $content .= $l['str_new_user_has_been_successfully_created'];
               } // zone created successfully
             }
-  
+
           }else{ // error, print form again
             $content .='
             <form action="' .  $_SERVER["PHP_SELF"] . '" method="post">
             ' . $hiddenfields . '
-            <input type="hidden" name="action" value="usercreation">        
+            <input type="hidden" name="action" value="usercreation">
             <table id="createusertable">
             <tr><td align="right">
             ' . $l['str_login'] . ': </td><td><input type="text" name="loginnew"
@@ -327,7 +327,7 @@ if($config->usergroups){
             <td align="right">' . $l['str_rights'] . ': </td><td><select name="grouprightsnew">
             <option value="R">' . $l['str_read_access'] . '</option>
             <option value="W">' . $l['str_write_access'] . '</option>
-            </select></td></tr>      
+            </select></td></tr>
             <tr><td colspan="2" align="center"><input type="submit" class="submit"
             value="' . $l['str_create_new_user_button'] . '"></td></tr>
             </table>
@@ -337,12 +337,12 @@ if($config->usergroups){
 
           break; // end case $action = usercreation
       } // end swith($action)
-  
+
     } // end else $action not null
 
   }else{ // end   if($group->getGroupRights($user->userid) == 'A')
     $title=$l['str_uppercase_error'];
-    $content= $l['str_you_are_not_admin_of_your_group'];  
+    $content= $l['str_you_are_not_admin_of_your_group'];
   }
 
 }else{ // end $user->RetrieveGroupRights() == 'A'

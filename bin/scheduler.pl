@@ -26,7 +26,7 @@ $LOG_PREFIX .='scheduler';
 ########################################################################
 # STOP STOP STOP STOP STOP STOP STOP STOP STOP STOP STOP STOPS STOP STOP
 #
-# Do not edit anything below this line           
+# Do not edit anything below this line
 ########################################################################
 
 # loop with a timer.
@@ -79,7 +79,7 @@ while(!$end){
 	$currenttime = time();
 	$difftime = $currenttime - $lasttime;
 	$lasttime=$currenttime;
-	
+
 	# GENERATE
 	$lastgenerate += $difftime;
 	if($lastgenerate >= $delay{'GENERATE'}){
@@ -88,16 +88,16 @@ while(!$end){
 		if($MULTISERVER){
 			system($XNAME_HOME . "pushtoservers.pl");
 		}
-		$lastgenerate = 0;	
+		$lastgenerate = 0;
 	}
-	
+
 	# INSERTLOGS
 	$lastinsertlogs += $difftime;
 	if($lastinsertlogs >= $delay{'INSERTLOGS'}){
 		system($XNAME_HOME . "insertlogs.pl");
 		$lastinsertlogs = 0;
 	}
-	
+
 	# retrieveremotelogs
 	if($MULTISERVER){
 		$lastretrieveremotelogs += $difftime;
@@ -106,14 +106,14 @@ while(!$end){
 			$lastretrieveremotelogs = 0;
 		}
 	}
-	
+
 	# optimize
 	$lastoptimize += $difftime;
 	if($lastoptimize >= $delay{'OPTIMIZE'}){
 		system($XNAME_HOME . "sqloptimize.pl");
 		$lastoptimize = 0;
 	}
-	
-	
+
+
 	sleep($sleeptime);
 } # end infinite loop (while(!$end))

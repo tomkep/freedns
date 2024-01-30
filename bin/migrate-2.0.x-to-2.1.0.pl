@@ -42,7 +42,7 @@ open(LOG, ">>" . $LOG_FILE);
 
 foreach(@tobeadded){
 	$query = "ALTER TABLE dns_user ADD " . $_;
-	
+
 	my $sth = $dbh->prepare($query);
 	if(!$sth){
 		print LOG logtimestamp() . " " . $LOG_PREFIX . " : Error:" . $dbh->errstr . "\n";
@@ -67,7 +67,7 @@ if (!$sth->execute) {
 }
 
 while (my $ref = $sth->fetchrow_hashref()) {
-# for each user, 
+# for each user,
 	$id = $ref->{'id'};
 
 	$query = "UPDATE dns_user SET groupid='" . $id . "', groupright='A'
@@ -122,7 +122,7 @@ if (!$sth->execute) {
 
 foreach(@tobeadded){
 	$query = "ALTER TABLE dns_zone ADD " . $_;
-	
+
 	my $sth = $dbh->prepare($query);
 	if(!$sth){
 		print LOG logtimestamp() . " " . $LOG_PREFIX . " : Error:" . $dbh->errstr . "\n";
@@ -133,7 +133,7 @@ foreach(@tobeadded){
 }
 
 # ####################################################
-# drop dns_modified and dns_deleted, replaced by status 
+# drop dns_modified and dns_deleted, replaced by status
 # in dns_zone
 $query = "DROP TABLE dns_modified";
 my $sth = $dbh->prepare($query);
@@ -192,7 +192,7 @@ print "
 With this new xname version, you have to define at least one name server
 (your main one).
 
-Please answer following questions 
+Please answer following questions
 (WARNING: no integrity check is done... answer carefully) :\n";
 #	id	int auto_increment unique,
 #	servername varchar(255) NOT NULL,
@@ -302,7 +302,7 @@ while (my $ref = $sth->fetchrow_hashref()) {
 
 foreach(@tobeadded){
 	$query = "ALTER TABLE dns_log ADD " . $_;
-	
+
 	my $sth = $dbh->prepare($query);
 	if(!$sth){
 		print LOG logtimestamp() . " " . $LOG_PREFIX . " : Error:" . $dbh->errstr . "\n";
@@ -333,7 +333,7 @@ while($ref = $sth->fetchrow_hashref()){
 				WHERE id='" . $id . "'";
     $sth2 = $dbh->prepare($query);
 	$sth2->execute;
-	
+
 }
 
 
@@ -349,13 +349,13 @@ if(!$sth){
 if (!$sth->execute) {
 	print LOG logtimestamp() . " " . $LOG_PREFIX . " : Error:" . $sth->errstr . "\n";
 }
-	
+
 # ####################################################
 #       migrate AZONE records
 # ####################################################
 
-@tobeexecuted = ("create temporary table azone 
-	select zoneid, 'A', concat(zone,'.'), val1 
+@tobeexecuted = ("create temporary table azone
+	select zoneid, 'A', concat(zone,'.'), val1
 	from dns_record r, dns_zone z where r.zoneid = z.id and r.type='AZONE'",
 	"insert into dns_record select * from azone",
 	"delete from dns_record where type='AZONE'",
@@ -377,7 +377,7 @@ foreach(@tobeexecuted){
 #        Add ttl to all records
 # ####################################################
 
-$query = 'ALTER TABLE dns_record add ttl 
+$query = 'ALTER TABLE dns_record add ttl
 			varchar(255) NOT NULL default "default"';
 my $sth = $dbh->prepare($query);
 if(!$sth){
@@ -392,7 +392,7 @@ if (!$sth->execute) {
 #        Add default TTL in dns_confprimary
 # ####################################################
 
-$query = "ALTER TABLE dns_confprimary add 
+$query = "ALTER TABLE dns_confprimary add
 	defaultttl varchar(255) NOT NULL default '43200'";
 my $sth = $dbh->prepare($query);
 if(!$sth){

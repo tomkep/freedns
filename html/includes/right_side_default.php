@@ -2,7 +2,7 @@
 
 // personnalize your layout HERE
 
-// contact 
+// contact
 include 'contact.php';
 
 ?>

@@ -16,7 +16,7 @@ html, body {
     margin: 0;
     font-size: 11px;
     font-family: Verdana, Arial, Helvetica, sans-serif;
-    color: #030303; 
+    color: #030303;
     background-color: #eee;
 }
 
@@ -24,7 +24,7 @@ p { margin: 0; padding: 0; }
 
 #headtitle { }
 
-#header  {  
+#header  {
     /* brzoskwinki <3 */
     height: 84px;
     padding: 3px 1px;
@@ -32,15 +32,15 @@ p { margin: 0; padding: 0; }
     background-color: #eee;
 }
 
-#header span { 
-    float: left; 
+#header span {
+    float: left;
     margin: 0 2px;
     width: 84px;
-    height: 84px; 
+    height: 84px;
     background: transparent url(peach.jpg);
 }
 
-#header a { 
+#header a {
     color: #B0340B;
     width: 100%;
     font-size: 0.1px;
@@ -58,7 +58,7 @@ p { margin: 0; padding: 0; }
 #linkline  {
     font-size: 13px;
     color: #FCFCFC;
-    text-align: center; 
+    text-align: center;
     padding: 2px 0;
     background-color: #B0340B;
     border-top: 1px solid #D6820D;
@@ -166,7 +166,7 @@ h3, h3.boxheader {
 }
 #rightcolumn h2 span { }
 
-#rightcolumn div div { 
+#rightcolumn div div {
     text-align: left;
     margin: 0 0 1em 1em;
 }
@@ -257,22 +257,22 @@ h3, h3.boxheader {
     font-size: 12px;
     color: #000;
     font-weight: 600;
-    text-align: center; 
+    text-align: center;
     background-color: #FC9A0F;
 }
 
 .boxtext, dd {
     margin-left: 2em;
     margin-bottom: 1em;
-    text-align: left; 
+    text-align: left;
 }
 
 dd { padding-right: 1em; }
 
 .boxheader, dt {
     font-size: 11px;
-    color: #000; 
-    text-align: left; 
+    color: #000;
+    text-align: left;
     vertical-align: top;
     font-weight: 600;
     margin-bottom: 10px;
@@ -331,7 +331,7 @@ table#legendtable { width: 40%; }
 
 #mainbox_content div#modify table {
     border: 1px solid #000;
-    background-color: #eee; 
+    background-color: #eee;
     width: 100%;
     padding: 3px;
     text-align: left;

@@ -3,7 +3,7 @@ XName INSTALL for v2.3.0
 WARNING: use these instruction for XName fresh installation only.
 See MIGRATE file for migration from an older version of XName.
 
-XName Database 
+XName Database
 ===================
 
 First, go into the XName directory.
@@ -39,7 +39,7 @@ XName web interface
         index and disclaimer contents are now localized, and available in
                 html/includes/strings/[CC]/index_content_default.php
                 html/includes/strings/[CC]/warranty.php
-        Copy index_content_default.php into index_content.php and 
+        Copy index_content_default.php into index_content.php and
 	modify index_content.php and warranty.php to fit your needs.
 
 
@@ -47,7 +47,7 @@ Be careful, programs dig, host and named-checkzone have to be available from
 your web server. Paths are configurable in the html/libs/config.php file.
 
 If you want to use your own design instead of XName.org's one,
-simply change each html/*.php file, accordingly 
+simply change each html/*.php file, accordingly
 with html/libs/html.php where original functions where present.
 html/libs/html.php class & functions are used only in html/*.php files.
 
@@ -61,11 +61,11 @@ XName DNS file generator & log insert
 
 First, you have to install bind. Tested on v9.2.*
 
-- edit your named.conf file (should be /etc/named.conf), configure general 
-options, suppress eventually everything at the end concerning local zones. 
+- edit your named.conf file (should be /etc/named.conf), configure general
+options, suppress eventually everything at the end concerning local zones.
 Be sure you've got a correctly running bind.
 
-You have now a clean conf file. 
+You have now a clean conf file.
 In bin/config.pl, you will define "$NAMED_CONF_ZONES" (in next step).
 Put an include line at the end of your named.conf file, including this
 file ($NAMED_CONF_ZONES="/etc/bind/xname-zones.conf" in our sample):
@@ -82,14 +82,14 @@ Then just copy whole named.conf into /etc/bind/named.conf or somewhere else
 Be sure named-checkconf is available on your system.
 
 If you don't use a scheduler - ie in bin/config.pl you don't have
-$SCHEDULER_RUN_AS_DAEMON=1; 
+$SCHEDULER_RUN_AS_DAEMON=1;
 modify crontab.
 
-WARNING: use of scheduler is HIGHLY recommended to prevent tasks 
-overlapping in case of high number of hosted zones. 
+WARNING: use of scheduler is HIGHLY recommended to prevent tasks
+overlapping in case of high number of hosted zones.
 
 Add in crontab a line for insertlogs.pl, every 10 mn
-Add a crontab line for delete.pl and generate.pl every hour 
+Add a crontab line for delete.pl and generate.pl every hour
 Add a crontab line for sqloptimize.pl, every week
 
 /etc/crontab sample:

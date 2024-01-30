@@ -2,10 +2,10 @@
 /*
   This file is part of XName.org project
   See  http://www.xname.org/ for details
-  
+
   License: GPLv2
   See LICENSE file, or http://www.gnu.org/copyleft/gpl.html
-  
+
   Author(s): Yann Hirou <hirou@xname.org>
 
 */
@@ -85,7 +85,7 @@ if(!$user->error && $user->authenticated==1){
   // print number of I zones
   print "NbI: $Izones\n";
   // print number of W zones
-  print "NbW: $Wzones\n";  
+  print "NbW: $Wzones\n";
   // print number of E zones
   print "NbE: $Ezones\n";
 

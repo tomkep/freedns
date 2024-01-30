@@ -2,10 +2,10 @@
 /*
   This file is part of XName.org project
   See  http://www.xname.org/ for details
-  
+
   License: GPLv2
   See LICENSE file, or http://www.gnu.org/copyleft/gpl.html
-  
+
   Author(s): Yann Hirou <hirou@xname.org>
 
 */
@@ -23,7 +23,7 @@ include 'libs/stats.php';
 
 
 // **********************************************************
-// Utilities 
+// Utilities
 
 
 // function mailer($from, $to, $subject, $headers, $message)
@@ -34,16 +34,16 @@ include 'libs/stats.php';
  *@param string $from sender email address
  *@param string $to recipient email address
  *@param string $subject subject of email
- *@param string $headers additional headers 
+ *@param string $headers additional headers
  *@param string $message body of email
  *@return int 1 if success, 0 if error
  */
 function mailer($from, $to, $subject, $headers, $message){
   global $config;
-  // TODO : verify mail by sending it directly, after 
+  // TODO : verify mail by sending it directly, after
   // a connexion on MX
   // has to be done using vrfyEmail()
-  
+
   // returns 0 if fails, 1 if succeed
   $mailcontent = "From: $from
 To: $to
@@ -195,7 +195,7 @@ function av_logViewer(){
  *@return int 0 or 1 if bad or valid IP
  */
 function checkIP($string){
-  if((strspn($string, "0123456789.") != strlen($string)) || 
+  if((strspn($string, "0123456789.") != strlen($string)) ||
   (count(explode('.' ,$string)) != 4)){
     $result = 0;
   }else{
@@ -206,7 +206,7 @@ function checkIP($string){
       $result = 1;
     }
   }
-  
+
   return $result;
 }
 
@@ -301,7 +301,7 @@ function checkZone($string){
  */
 function checkName($string){
   $string = strtolower($string);
-  // only specified char 
+  // only specified char
   if(strspn($string, "0123456789abcdefghijklmnopqrstuvwxyz-") !=
   strlen($string)){
     $result = 0;
@@ -393,7 +393,7 @@ function vrfyEmail($string){
  *@param string $zone zone name to dig
  *@return string effective status or "connection timed out" or "unknown problem"
  */
-function checkDig($server,$zone){  
+function checkDig($server,$zone){
   global $config;
   $server = escapeshellarg($server);
   $zone = escapeshellarg($zone);
@@ -403,7 +403,7 @@ function checkDig($server,$zone){
   // check if status:*
   // return *
   // if "connection timed out" return "connection timed out"
-  
+
   if(ereg("status: ([[:alnum:]]+),",$result,$status)){
     return $status[1];
   }else{
@@ -455,7 +455,7 @@ function DigSerial($server,$zone){
  *@param string $server server to dig
  *@param string $zone zone to dig
  *@return string dig result
- */ 
+ */
 function zoneDig($server,$zone){
   global $config;
   if (!checkIP($server) && !checkDomain($server))
@@ -470,12 +470,12 @@ function zoneDig($server,$zone){
 
 // function retrieveArgs($name, $httpvars)
 /**
- * Retrieve arguments from an associative array where 
+ * Retrieve arguments from an associative array where
  * arguments names are incremental - for example foo1,foo2,foo3
  * and return an array with all values
  *
  *@param string $name non-incremental part of var name (example: foo in foo1)
- *@param array $httpvars associative array to be parsed - example $HTTP_GET_VARS 
+ *@param array $httpvars associative array to be parsed - example $HTTP_GET_VARS
  *@return array array of values
  */
 function retrieveArgs($name, $httpvars){
@@ -484,7 +484,7 @@ function retrieveArgs($name, $httpvars){
      if (preg_match("/^".$name."[0-9]+$/", $key)) {
        array_push($result, $value);
      }
-  }  
+  }
   return $result;
 }
 
@@ -522,7 +522,7 @@ function diffDate($date){
                         $min=substr($date,14,2);
                         $sec=substr($date,17,2);
                 }
-  }  
+  }
   $datets=mktime($hour,$min,$sec,$month,$day,$year);
 
   return $nowts - $datets;
@@ -538,7 +538,7 @@ function diffDate($date){
   // $date : YYYY MM DD HH mm
   $now=strftime("%Y%m%d%H%M%S");
   return $now;
-  
+
   }
 
 
@@ -558,8 +558,8 @@ function diffDate($date){
     $datets=mktime($hour,$min,$sec,$month,$day,$year);
     return $datets;
   }
-  
-  
+
+
 // Function timestampToDate($timestamp)
   /**
    * Returns epoch timestamp formated into YYYYMMDDHHmmss
@@ -589,13 +589,13 @@ function diffDate($date){
     if($sec < 10){
       $sec = "0" . $sec;
     }
-    
+
     $result = $year.$month.$day.$hour.$min.$sec;
 
     return $result;
   }
-  
-  
+
+
 // *******************************************************
 //  Function getSerial($previous)
 /**
@@ -623,7 +623,7 @@ function diffDate($date){
 /**
  * retrieve content of given directory in a list
  *
- *@param string $dir directory to be listed 
+ *@param string $dir directory to be listed
  *@return list $list list of items in directory
  */
 function GetDirList($dir){
@@ -644,7 +644,7 @@ function GetDirList($dir){
  * convert $string into IPv6 nibble format
  *
  *@param string $string IPv6 any format
- *@param int $bytes number of bytes in address 
+ *@param int $bytes number of bytes in address
  *@return string $ipv6 ipv6 address in nibble format
  */
 function ConvertIPv6toDotted($string, $bytes = 32){
@@ -652,7 +652,7 @@ function ConvertIPv6toDotted($string, $bytes = 32){
     $ipsplit = split(":",$string);
     $newiparray = array();
     if(count($ipsplit) < $bytes / 4){
-      // total: 8 fields separated by ":"     
+      // total: 8 fields separated by ":"
       reset($ipsplit);
       while(list($null,$ipitem) = each($ipsplit)){
         if($ipitem == ''){
@@ -680,11 +680,11 @@ function ConvertIPv6toDotted($string, $bytes = 32){
     array_pop($ipsplit);
     array_shift($ipsplit);
     $ip = join('.',$ipsplit);
-    return $ip;  
+    return $ip;
   }else{
     return $string;
   }
-} 
+}
 
 function urlpop($url) {
   return $url . '" class="linkcolor" ' .

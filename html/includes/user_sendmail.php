@@ -10,7 +10,7 @@ $mailbody = '
 
 ' . $l['str_email_regards'] . '
 
--- 
+--
 ' . $config->emailsignature . '
 
 

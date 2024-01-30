@@ -2,10 +2,10 @@
 /*
   This file is part of XName.org project
   See  http://www.xname.org/ for details
-  
+
   License: GPLv2
   See LICENSE file, or http://www.gnu.org/copyleft/gpl.html
-  
+
   Author(s): Yann Hirou <hirou@xname.org>
 
 */
@@ -44,9 +44,9 @@ if($user->authenticated==1){
         $order='D'; // default is descending
       }
       $sortcategory = addslashes($sortcategory);
-      
-      
-      // delete 
+
+
+      // delete
       if((isset($_REQUEST) && (isset($_REQUEST['delete'])))
         || (!isset($_REQUEST) && isset($delete))){
         $listofdelete = retrieveArgs("delete", $_REQUEST);
@@ -70,13 +70,13 @@ if($user->authenticated==1){
             $content .= $l['str_no_logs_for_deletion'] . '<br>';
           }
         }
-      
+
       }
-      
+
       // purge
       if((isset($_REQUEST) && (isset($_REQUEST['purgebutton'])))
         || (!isset($_REQUEST) && isset($purgebutton))){
-        
+
         if(isset($_REQUEST)){
           $purge=$_REQUEST['purge'];
         }
@@ -103,7 +103,7 @@ if($user->authenticated==1){
               }
             }
             break;
-            
+
           case "day":
             $deletedate = timestampToDate($datets -60*60*24);
             $userlogs->deleteLogsBefore($deletedate);
@@ -118,30 +118,30 @@ if($user->authenticated==1){
             break;
         } // end switch purge
         if($userlogs->error){
-          $content .= sprintf($html->string_error, 
+          $content .= sprintf($html->string_error,
             sprintf($l['str_while_purging_logs_x'],
-              $userlogs->error) 
+              $userlogs->error)
               ) . '<br>';
         }
       } // end if purge
-      
-      
+
+
       // print table with logs & delete
       $content .= '<form action="' .  $_SERVER["PHP_SELF"] . '" method="get">
       ' . $hiddenfields . '
       <input type="hidden" name="sortcategory" value="' . $sortcategory .
       '"><input type="hidden" name="order" value="' . $order .'">
-      ' . $l['str_sort_results'] . ':&nbsp;&nbsp; 
+      ' . $l['str_sort_results'] . ':&nbsp;&nbsp;
       <a href="' .  $_SERVER["PHP_SELF"] . $link .
       '&amp;sortcategory=D">' . $l['str_per_date'] . '</a> &nbsp;&nbsp;
       |&nbsp;&nbsp; <a href="' . $_SERVER["PHP_SELF"] . $link .
-      '&amp;sortcategory=Z">' . $l['str_per_zone'] . '</a>&nbsp;&nbsp; |&nbsp;&nbsp; 
+      '&amp;sortcategory=Z">' . $l['str_per_zone'] . '</a>&nbsp;&nbsp; |&nbsp;&nbsp;
       <a href="' .  $_SERVER["PHP_SELF"] . $link .
       '&amp;sortcategory=U">' . $l['str_per_user'] . '</a><br>
       <a href="' .  $_SERVER["PHP_SELF"] . $link . '&amp;sortcategory=' .
-      $sortcategory . '&amp;order=A">&lt;</a> 
+      $sortcategory . '&amp;order=A">&lt;</a>
       <a href="' .  $_SERVER["PHP_SELF"] . $link . '&amp;sortcategory=' .
-      $sortcategory . '&amp;order=D">&gt;</a> 
+      $sortcategory . '&amp;order=D">&gt;</a>
       <p >
       <table id="userlogstable">
       ';
@@ -156,21 +156,21 @@ if($user->authenticated==1){
         default: // print by date
           $listoflogs=$userlogs->showGroupLogs("date", $order);
       } // end switch $sortcategory
-      
+
       $deletecount=0;
       if(!count($listoflogs)){
         $content .= '<tr><td>' . $l['str_no_logs_available'] . '</td></tr>';
       }
-      while($line=array_pop($listoflogs)){ 
+      while($line=array_pop($listoflogs)){
         // id/date/userid/zoneid/content
         $deletecount++;
         // MySQL 3
         $newdate = preg_replace("/^(....)(..)(..)(..)(..)(..)$/",
-            "\\1-\\2-\\3 \\4:\\5:\\6", 
+            "\\1-\\2-\\3 \\4:\\5:\\6",
             $line[1]);
         $content .= '<tr><td valign="top">';
         // dummy entry necessary for retrieveArgs to work
-        // correctly... 
+        // correctly...
         // used for purge.
         $content .= '<input type="hidden" name="id' . $deletecount . '"
         value="' . $line[0] . '">';
@@ -192,19 +192,19 @@ if($user->authenticated==1){
       $l['str_purge'] . '">
       </td>
       <td align="right">
-      <input type="submit" class="submit" name="delete" value="' . 
+      <input type="submit" class="submit" name="delete" value="' .
       $l['str_delete_selected'].'">
       </td></tr></table>
       </form>';
-      
+
     }else{ // end groupright == A
-      $content = sprintf($html->string_error, 
+      $content = sprintf($html->string_error,
             $l['str_you_are_not_admin_of_your_group'] .
             $l['str_only_admin_can_access_logs']
           );
     } // end groupright != A
   }else{ // end config usergroups
-    $content = sprintf($html->string_error, 
+    $content = sprintf($html->string_error,
           $l['str_groups_disabled_in_server_conf']
         );
   }

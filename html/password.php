@@ -2,20 +2,20 @@
  /*
   This file is part of XName.org project
   See  http://www.xname.org/ for details
-  
+
   License: GPLv2
   See LICENSE file, or http://www.gnu.org/copyleft/gpl.html
-  
+
   Author(s): Yann Hirou <hirou@xname.org>
 
 */
 
  // send password recovery by email
- 
+
  // args : $id (in email), $account
 
 $page_title="str_password_recovery_title";
-// headers 
+// headers
 include 'includes/header.php';
 
 if(file_exists("includes/left_side.php")) {
@@ -30,7 +30,7 @@ $title = $l['str_password_recovery_title'];
 if((isset($_REQUEST) && !isset($_REQUEST['id']) && !isset($_REQUEST['account']))
   || (!isset($_REQUEST) && !isset($id) && !isset($account))){
   $content = $l['str_lost_pwd_fill_in_fields_to_recover_password'] . '<p >
-  
+
   <form action="' .  $_SERVER["PHP_SELF"] . '" method="post">
   <input type="hidden" name="language" value="' . $lang .'">
   <table id="passwordrecoverytable">
@@ -45,8 +45,8 @@ if((isset($_REQUEST) && !isset($_REQUEST['id']) && !isset($_REQUEST['account']))
   </form>';
 }else{
   $content = '';
-  if((isset($_REQUEST) && (!empty($_REQUEST['account']) || 
-    !empty($_REQUEST['zonename']))) || 
+  if((isset($_REQUEST) && (!empty($_REQUEST['account']) ||
+    !empty($_REQUEST['zonename']))) ||
     (!isset($_REQUEST) && (!empty($account) || !empty($zonename)))){
     $localerror = 0;
     if((isset($_REQUEST) && !empty($_REQUEST['zonename'])) ||
@@ -60,7 +60,7 @@ if((isset($_REQUEST) && !isset($_REQUEST['id']) && !isset($_REQUEST['account']))
         $zone=new Zone($zonename,'S');
         if(!empty($zone->error)){
           $content .= sprintf($html->string_error,
-                $zone->error); 
+                $zone->error);
           $localerror=1;
         }
       }
@@ -83,7 +83,7 @@ if((isset($_REQUEST) && !isset($_REQUEST['id']) && !isset($_REQUEST['account']))
         }
       }
     }
-    
+
     if(!$localerror){
       // generate sessionid
       $id = $user->generateIDRecovery();
@@ -98,8 +98,8 @@ if((isset($_REQUEST) && !isset($_REQUEST['id']) && !isset($_REQUEST['account']))
           include ('includes/password_sendmail.php');
           $email = $user->getEmail($account);
           if(!$email){
-            $content .=  sprintf($html->string_error, 
-                  $l['str_email_not_sent'] 
+            $content .=  sprintf($html->string_error,
+                  $l['str_email_not_sent']
                 );
           }else{
             if(mailer($config->tousersource,$email,
@@ -107,15 +107,15 @@ if((isset($_REQUEST) && !isset($_REQUEST['id']) && !isset($_REQUEST['account']))
             ,"Content-Type: text/plain; charset=" . $l['str_content_type'], $mailbody)){
               $content .= $l['str_recovery_mail_sent'];
             }else{
-              $content .= sprintf($html->string_error, 
-                $l['str_errors_occured_during_recovery_mail_sending'] 
+              $content .= sprintf($html->string_error,
+                $l['str_errors_occured_during_recovery_mail_sending']
                 ) . "<br>";
             }
           }
         }
       }
     }
-    
+
   }else{
     if((isset($_REQUEST) && isset($_REQUEST['id'])) ||
       (!isset($_REQUEST) && isset($id))){
@@ -128,10 +128,10 @@ if((isset($_REQUEST) && !isset($_REQUEST['id']) && !isset($_REQUEST['account']))
           $password = $user->generateRandomPassword(16);
           $user->updatePassword($password);
           $content .= '
-          ' . $l['str_password_recovery_login_is'] . 
-          ': <div class="boxheader">' 
+          ' . $l['str_password_recovery_login_is'] .
+          ': <div class="boxheader">'
           . $user->retrieveLogin($user->userid) . '</div><p >' .
-          $l['str_your_password_is'] . ': <div class="boxheader">' 
+          $l['str_your_password_is'] . ': <div class="boxheader">'
           . $password . '</div><p >
           ' . sprintf($l['str_you_can_now_use_the_x_main_interface_x_to_log_in'],
           '<a href="index.php">','</a>');
@@ -147,8 +147,8 @@ if((isset($_REQUEST) && !isset($_REQUEST['id']) && !isset($_REQUEST['account']))
           $zonename = $_REQUEST['zonename'];
         }
         $zonename = addslashes($zonename);
-        
-        if((isset($_REQUEST) && empty($_REQUEST['zonetype'])) || 
+
+        if((isset($_REQUEST) && empty($_REQUEST['zonetype'])) ||
           (!isset($_REQUEST) && empty($zonetype))){
           $content .= sprintf($html->string_error,
                 $l['str_you_did_not_specify_zonetype']
@@ -161,7 +161,7 @@ if((isset($_REQUEST) && !isset($_REQUEST['id']) && !isset($_REQUEST['account']))
           $zonetype = addslashes($zonetype);
           $zone=new Zone($zonename,$zonetype);
           if(!empty($zone->error)){
-            $content .= sprintf($html->string_error, 
+            $content .= sprintf($html->string_error,
                   $zone->error
                 );
           }else{
@@ -170,7 +170,7 @@ if((isset($_REQUEST) && !isset($_REQUEST['id']) && !isset($_REQUEST['account']))
         }
       }else{
         // nothing entered
-        $content .= sprintf($html->string_error, 
+        $content .= sprintf($html->string_error,
                $l['str_you_did_not_enter_login_nor_zonename']
             );
         $localerror = 1;

@@ -2,10 +2,10 @@
 /*
   This file is part of XName.org project
   See  http://www.xname.org/ for details
-  
+
   License: GPLv2
   See LICENSE file, or http://www.gnu.org/copyleft/gpl.html
-  
+
   Author(s): Yann Hirou <hirou@xname.org>
 
 */
@@ -31,7 +31,7 @@ if(isset($_REQUEST)){
   }
 }
 $lang=substr($lang, 0, 2);
-// verify if language exists ! 
+// verify if language exists !
 if(!is_file('includes/strings/' . $lang .'/strings.php')){
   $lang = $config->defaultlanguage;
 }

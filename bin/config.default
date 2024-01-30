@@ -77,7 +77,7 @@ $EMAIL_SOA = "your\@email.address";
 $EMAIL_FROM = "YOUR SERVICE NAME <your\@email.address>";
 $EMAIL_SUBJECT_PREFIX = "[Whatever you want]";
 $EMAIL_SIGNATURE = "
--- 
+--
 Foo Team
 your\@email.address
 ";
@@ -103,9 +103,9 @@ $CHECKCONF_COMMAND = '/usr/local/sbin/named-checkconf';
 # if you want to run a scheduler, set to 1.
 # else, set to 0, and run scripts from crontab
 # scripts are: bin/delete.pl, bin/generate.pl, bin/insertlogs.pl,
-# bin/sqloptimize.pl. in case of multi-server installation, run also 
+# bin/sqloptimize.pl. in case of multi-server installation, run also
 # following scripts: bin/pushtoservers.pl, bin/getremotelogs.pl.
-$SCHEDULER_RUN_AS_DAEMON=1; 
+$SCHEDULER_RUN_AS_DAEMON=1;
 # following delays can be in min, hour or day. Just precise "H" "M" or "D"
 $DELAY_GENERATE="1H"; # delay to re-generate named.conf and reload zones
 $DELAY_INSERTLOGS="10M"; # delay to insert logs
@@ -152,7 +152,7 @@ $LOG_PATTERN_NAMED = "^([^\\s]+)\\s+([^\\s]+)\\s+([^\\s]+)\\s+[^\\s]+\\s+named[^
 # $4 : status
 # $5 : content
 #
-# 01-Jun-2010 14:50:35.170 xfer-in: info: transfer of 'example.com/IN' 
+# 01-Jun-2010 14:50:35.170 xfer-in: info: transfer of 'example.com/IN'
 #    from 87.98.164.164#53: Transfer completed: 0 messages, 0 records, 0 bytes, 74.997 secs (0 bytes/sec)
 $LOG_USE_NAMED_SEVERITY='1';
 $LOG_PATTERN_NAMED = "^([^-]+-[^-]+-[^\\s]+\\s+[^:]+:[^:]+[^\\s]+)\\s+[^\\s]+\\s+([^:]+):\\s+(.*)";

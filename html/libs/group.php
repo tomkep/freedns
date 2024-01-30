@@ -3,10 +3,10 @@
 /*
   This file is part of XName.org project
   See  http://www.xname.org/ for details
-  
+
   License: GPLv2
   See LICENSE file, or http://www.gnu.org/copyleft/gpl.html
-  
+
   Author(s): Yann Hirou <hirou@xname.org>
 
 */
@@ -35,9 +35,9 @@ class Group {
    *@param string $userid ID of user member of group
    */
   Function Group($userid){
-    global $dbauth,$l,$config;  
+    global $dbauth,$l,$config;
     $this->error="";
-    
+
     // retrieve groupid
     $query = sprintf(
       "SELECT %s FROM %s WHERE %s='%s'",
@@ -52,19 +52,19 @@ class Group {
       $line=$dbauth->fetch_row($res);
       $this->groupid = $line[0];
     }
-    
+
 
   }
-  
-  
-  
+
+
+
 // Function GroupUserCreate($login,$password,$email,$groupid,$groupright)
   /**
    * Create new user with given login, pass & email
    * in given group with given right (R or W)
    *
    *@access public
-   *@param string $login login 
+   *@param string $login login
    *@param string $password password
    *@param string $email email
    *@param int $groupid id of group to be inserted in
@@ -84,7 +84,7 @@ class Group {
           $this->error=$l['str_wrong_group_rights'];
           return 0;
         }
-        $options="advanced=0;ipv6=0;txtrecords=0;nbrows=4;grouprights=" . $groupright . ";";  
+        $options="advanced=0;ipv6=0;txtrecords=0;nbrows=4;grouprights=" . $groupright . ";";
         $query = sprintf(
           "INSERT INTO %s (%s,%s,%s,%s,%s,%s) VALUES ('%s','%s','%s','%s','%s','%s')",
           $config->userdbtable,
@@ -176,9 +176,9 @@ class Group {
       }else{
         return 0;
       }
-    }    
+    }
   }
-  
+
 // Function setGroupRights($id,$groupright)
   /**
    * Set group right to $groupright for given $id
@@ -217,8 +217,8 @@ class Group {
       return 1;
     }
   }
-        
-  
+
+
 // Function isMember($id)
   /**
    * Check if given Id is member of current group or not
@@ -246,7 +246,7 @@ class Group {
       return $line[0];
     }
   }
-  
+
 // Function deleteUser($id)
   /**
    * Remove user from DB - all zones belongs to group
@@ -271,16 +271,16 @@ class Group {
       return 1;
     }
   }
-  
-  
-  
+
+
+
 // Function listallzones()
   /**
    * list all zones owned by same group
    *
    *@access public
    *@return array array of all zones/zonestypes owned by user or 0 if error
-   */  
+   */
   Function listallzones($zone="",$template=0){
     global $db,$l;
     global $user;
@@ -309,7 +309,7 @@ class Group {
 
 // Function getOptions($id)
   /**
-   * Returns options for given user. 
+   * Returns options for given user.
    *
    *@access private
    *@return int 0 if error, 1 if success

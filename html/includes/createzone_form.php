@@ -1,7 +1,7 @@
 <?
 if($config->usergroups){
   $allzones = $group->listallzones("", 1);
-  $user->error = $group->error;      
+  $user->error = $group->error;
 }else{
   $allzones = $user->listallzones("", 1);
 }

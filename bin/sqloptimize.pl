@@ -38,7 +38,7 @@ $LOG_PREFIX .=$str_log_sqloptimize_prefix{$SITE_DEFAULT_LANGUAGE};
 ########################################################################
 # STOP STOP STOP STOP STOP STOP STOP STOP STOP STOP STOP STOPS STOP STOP
 #
-# Do not edit anything below this line           
+# Do not edit anything below this line
 ########################################################################
 
 # select all tables

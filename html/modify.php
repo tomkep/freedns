@@ -2,10 +2,10 @@
 /*
   This file is part of XName.org project
   See  http://www.xname.org/ for details
-  
+
   License: GPLv2
   See LICENSE file, or http://www.gnu.org/copyleft/gpl.html
-  
+
   Author(s): Yann Hirou <hirou@xname.org>
 
 */
@@ -13,9 +13,9 @@
   // modify.php
   // require user to be already logged-in, it means
   // parameters are $idsession or $zonename and $password
-  
+
 $page_title = "str_modify_zone_title";
-// headers 
+// headers
 include 'includes/header.php';
 
 if(file_exists("includes/left_side.php")) {
@@ -41,9 +41,9 @@ if($user->authenticated==1){
       // verify that $zone is owned by user or group
       if((!$config->usergroups &&
         $zone->RetrieveUser() != $user->userid) ||
-        ($config->usergroups && 
+        ($config->usergroups &&
         $zone->RetrieveUser() != $group->groupid)){
-        $content = sprintf($html->string_error, 
+        $content = sprintf($html->string_error,
           sprintf($l['str_you_can_not_manage_delete_zone_x_x'],
              $zone->zonename,$zone->zonetype)
              );
@@ -54,7 +54,7 @@ if($user->authenticated==1){
         ';
 
 
-        
+
         if($zone->zonetype=='P'){
           $title = sprintf($l['str_title_zone_type_x_x'],
                   $zone->zonename,$l['str_primary']);
@@ -123,7 +123,7 @@ if($user->authenticated==1){
             }else{
               $modifyptripv6 = "0";
             }
-            
+
           }
           $xferip=addslashes($xferip);
           $defaultttl=addslashes($defaultttl);
@@ -180,16 +180,16 @@ if($user->authenticated==1){
           }
         }
         if($modified == 1){
-          if($config->usergroups && ($usergrouprights == 'R')){ 
+          if($config->usergroups && ($usergrouprights == 'R')){
           // if usergroups, zone is owned by
           // group and current user has no creation rights
-            $content .= sprintf($html->string_error,  
+            $content .= sprintf($html->string_error,
              $l['str_not_allowed_by_group_admin_to_create_write_zones']
                  );
           }else{
             $content .= $currentzone->printModified($params);
             // logs
-            if($config->usergroups){ 
+            if($config->usergroups){
               if($config->userlogs){
                 if(!$currentzone->error){
                   if($currentzone->zonetype == 'P'){
@@ -204,14 +204,14 @@ if($user->authenticated==1){
                     $currentzone->zonename,
                     $currentzone->zonetype));
                   }
-                  
+
                 }else{
                   $userlogs->addLogs($currentzone->zoneid,
                   sprintf($l['str_errors_occured_during_modification_of_x_x'],
                   $currentzone->zonename,
                   $currentzone->zonetype,
                   addslashes($currentzone->error)));
-                }              
+                }
                 if($userlogs->error){
                   $content .= sprintf($html->string_error,
                    sprintf($l['str_logging_action_x'],$userlogs->error)
@@ -219,14 +219,14 @@ if($user->authenticated==1){
                 }
               }
             }
-          } // end usergrouprights != R    
+          } // end usergrouprights != R
         }else{
-          if($config->usergroups && ($usergrouprights == 'R')){ 
+          if($config->usergroups && ($usergrouprights == 'R')){
             // if usergroups, zone is owned by
             // group and current user has no creation rights
             $content = sprintf($html->string_warning,
-               $l['str_not_allowed_by_group_admin_to_create_write_zones'] . 
-              $l['str_validation_of_this_form_will_be_inactive'] 
+               $l['str_not_allowed_by_group_admin_to_create_write_zones'] .
+              $l['str_validation_of_this_form_will_be_inactive']
               );
           }else{
             $content = "";
@@ -273,20 +273,20 @@ if($user->authenticated==1){
                     $l['str_as_member_of_group_action_logged']
                     );
             }
-          }  
+          }
         }
       }
     }
   }else{
     $title =  $l['str_choose_a_zone_to_modify'];
-  
+
     if($config->usergroups){
       $allzones = $group->listallzones();
-      $user->error=$group->error;      
+      $user->error=$group->error;
     }else{
       $allzones = $user->listallzones();
     }
-  
+
     if(empty($user->error)){
       $content =  '<h3 class="boxheader">' . $l['str_choose_a_zone_to_modify']
       . '</h3>';
@@ -294,7 +294,7 @@ if($user->authenticated==1){
       while($otherzone= array_pop($allzones)){
         $newzone = new Zone($otherzone[0], $otherzone[1], $otherzone[2]);
         $status = $newzone->zonestatus();
-        $urlpar = $link . '&amp;zonename=' . $newzone->zonename 
+        $urlpar = $link . '&amp;zonename=' . $newzone->zonename
                         . '&amp;zonetype=' . $newzone->zonetype;
         $content .= '<tr>
           <td>

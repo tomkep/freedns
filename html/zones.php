@@ -3,16 +3,16 @@
 /*
   This file is part of XName.org project
   See  http://www.xname.org/ for details
-  
+
   License: GPLv2
   See LICENSE file, or http://www.gnu.org/copyleft/gpl.html
-  
+
   Author(s): Yann Hirou <hirou@xname.org>
 
 */
 
 $page_title="str_view_zones_title";
-// headers 
+// headers
 include 'includes/header.php';
 
 if(file_exists("includes/left_side.php")) {
@@ -33,7 +33,7 @@ if($user->authenticated == 0){
 
   if($config->usergroups){
     $allzones = $group->listallzones($zone);
-    $user->error=$group->error;    
+    $user->error=$group->error;
   }else{
     $allzones = $user->listallzones($zone);
   }
@@ -82,7 +82,7 @@ if($user->authenticated == 0){
           $serial = sprintf($html->fontred, $l['str_not_available']);
         }
         $content .= "<tr><td></td><td>$nameserver</td><td>$serial</td>";
-        $content .= '<td><a href="' . 
+        $content .= '<td><a href="' .
           urlpop($urldig . '&amp;server=' . $nameserver) .
           '">' . $l['str_zone_content'] .  '</a></td></tr>';
       } // nameservers

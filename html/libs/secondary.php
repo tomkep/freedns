@@ -2,10 +2,10 @@
 /*
  This file is part of XName.org project
  See http://www.xname.org/ for details
- 
+
  License: GPLv2
  See LICENSE file, or http://www.gnu.org/copyleft/gpl.html
- 
+
  Author(s): Yann Hirou <hirou@xname.org>
 
 */
@@ -17,7 +17,7 @@
  * All functions for secondary manipulation
  *
  *@access public
- */ 
+ */
 class Secondary extends Zone {
 
  var $masters;
@@ -25,7 +25,7 @@ class Secondary extends Zone {
  var $serial;
  var $creation;
  var $user;
- 
+
  // Instanciation
  /**
   * Class constructor - initialize all secondary data from DB
@@ -35,11 +35,11 @@ class Secondary extends Zone {
   *@param string $zonetype type of zone (necessary secondary...)
   *@param object User $user Current user
   */
-  
+
  Function Secondary($zonename,$zonetype,$user){
   global $db,$l;
   $this->Zone($zonename,$zonetype);
-  
+
   $query = "SELECT masters,xfer,serial
   FROM dns_confsecondary WHERE zoneid='" . $this->zoneid . "'";
   $res = $db->query($query);
@@ -85,9 +85,9 @@ class Secondary extends Zone {
   <form method="POST">
    <input type="hidden" name="modified" value="1">
    ' . $hiddenfields . '
-   <input type="hidden" name="zonename" value="' . 
+   <input type="hidden" name="zonename" value="' .
    $this->zonename . '">
-   <input type="hidden" name="zonetype" value="' . 
+   <input type="hidden" name="zonetype" value="' .
    $this->zonetype . '">
       <p>' . $l['str_secondary_be_sure_that_name_server_is_auth'] . '</p>
    <table>
@@ -134,14 +134,14 @@ class Secondary extends Zone {
    value="' . $l['str_secondary_modify_button'] . '"></td></tr>
    </table>
   </form>
-  ';  
+  ';
 
   return $result;
  }
 
 // Function PrintModified($params)
  /**
-  * Take params send by "printmodifyform", do integrity 
+  * Take params send by "printmodifyform", do integrity
   * checks,checkDig & call $this->updateDb
   *
   *@access public
@@ -150,24 +150,24 @@ class Secondary extends Zone {
   */
  Function PrintModified($params){
   global $db, $config,$html, $l;
-    
+
   list($primary,$xfer,$xferip)=$params;
   $content = "";
   $localerror=0;
   if(empty($primary)){
    $localerror = 1;
    $content .= sprintf($html->string_error,
-    $l['str_secondary_you_must_provide_a_primary'] 
+    $l['str_secondary_you_must_provide_a_primary']
     ) . '<br >';
   }
-  
+
   // if primary modified ==> try to dig
   if($primary != $this->masters){
-   // check primary integrity 
+   // check primary integrity
    if(!checkPrimary($primary)){
     $localerror = 1;
-    $content .= sprintf($html->string_error, 
-       $l['str_secondary_your_primary_should_be_an_ip'] . 
+    $content .= sprintf($html->string_error,
+       $l['str_secondary_your_primary_should_be_an_ip'] .
        "<br >" .
        $l['str_secondary_if_you_want_two_primary']
       ) . '<br >';
@@ -231,7 +231,7 @@ class Secondary extends Zone {
        $dig = '"' . $dig . '" (' . $msg . ')';
       }
 
-      $content .= sprintf($html->string_warning, 
+      $content .= sprintf($html->string_warning,
         sprintf($l['str_trying_to_dig_from_x_returned_status_x'],
          $ipserver, $dig)
         );
@@ -242,13 +242,13 @@ class Secondary extends Zone {
     }
    }
   }
-  
-  
+
+
   // check xferip
   if(!empty($xferip)){
    if(!checkPrimary($xferip)){
     $localerror = 1;
-    $content .= sprintf($html->string_error, 
+    $content .= sprintf($html->string_error,
        $l['str_secondary_invalid_list_of_allowtransfer']
       ) . '<br >';
    }
@@ -259,7 +259,7 @@ class Secondary extends Zone {
    }
   }
 
-  
+
   switch($xfer){
    case "all":
     $xferip = 'any';
@@ -272,7 +272,7 @@ class Secondary extends Zone {
     if(substr($xferip, -1) == ';'){
      $xferip = substr($xferip, 0, -1);
     }
-    
+
     // suppress duplicate entry of $primary if already in $xferip
     $xferarray = split(';',$xferip);
     $xferiparray=array();
@@ -288,11 +288,11 @@ class Secondary extends Zone {
    default:
     $xferip="any";
    }
-  
-  
+
+
   if(!$localerror){
    // updatedb
-   if(!$this->updateDb($primary,$xferip)){  
+   if(!$this->updateDb($primary,$xferip)){
     $content .= $this->error;
    }else{
     // flag status='M' to be generated & reloaded
@@ -309,7 +309,7 @@ class Secondary extends Zone {
      $nsxferips = array_merge($nsxferips,$nsxips);
      $nsxferips = array_unique($nsxferips);
      $content .= '
-     <h3 class=boxheader>' . 
+     <h3 class=boxheader>' .
      sprintf($l['str_secondary_zone_successfully_modified_on_x'],
      $config->sitename) . '</h3>
      ' . $l['str_secondary_after_modif_be_sure_to'] . ':<ul>
@@ -322,12 +322,12 @@ class Secondary extends Zone {
      }
     $content .='
     </pre>
-    
-    <li>' . 
+
+    <li>' .
     $l['str_secondary_after_modif_add_to_configfile'] . ':
     <p >
     <pre>
-// 
+//
 // ' . $l['str_secondary_after_modif_comment_in_sample_1'] . '
 // ' . $l['str_secondary_after_modif_comment_in_sample_2'] . '
 //
@@ -336,8 +336,8 @@ zone "' . $this->zonename . '" {
  file "' . $this->zonename . '";
  allow-transfer {
   ';
-  
-  
+
+
   while(list($notwanted,$nsxferip) = each($nsxferips)){
    $content .= $nsxferip . '; ';
   }
@@ -349,7 +349,7 @@ zone "' . $this->zonename . '" {
      <li>' . $l['str_secondary_after_modif_set_firewall'] .'
      <li>' . sprintf($l['str_secondary_after_modif_delegate_x_to'],
        $this->zonename) . ': ';
-    
+
      reset($nsxnames);
      $serverlist ='';
      while(list($notwanted,$nsxname) = each($nsxnames)){
@@ -359,18 +359,18 @@ zone "' . $this->zonename . '" {
 
      $content .= $serverlist . '
      </ul>
-    
+
      <p>' . $l['str_secondary_reload_info'] . '<p>
 
      ';
     } // else no error
    } // else updatedb
   }else{
-   // $error 
+   // $error
    // nothing has been modified, go back and solve troubles
-   
+
    // or print form again
-  
+
   }
   return $content;
 
@@ -391,10 +391,10 @@ zone "' . $this->zonename . '" {
    global $db,$l;
 
    // 27/03/02 not possible to change email address in this script
-   // dns_confsecondary  
+   // dns_confsecondary
    if($this->creation==0){
-     $query = "UPDATE dns_confsecondary SET masters='" . 
-       $primary . "', xfer='" . $xferip . "' WHERE zoneid='" . 
+     $query = "UPDATE dns_confsecondary SET masters='" .
+       $primary . "', xfer='" . $xferip . "' WHERE zoneid='" .
        $this->zoneid . "'";
    }else{
      $query = "INSERT INTO dns_confsecondary (zoneid,masters,xfer)

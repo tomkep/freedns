@@ -10,7 +10,7 @@ $content = '
   <dt>Idea</dt>
   <dd>
     Ceci est un service gratuit de gestion DNS fourni par 42.pl.<br >
-    Essayez de vous debrouiller avec l\'interface, 
+    Essayez de vous debrouiller avec l\'interface,
     cela devrait etre assez facile.
   </dd>
 
@@ -37,7 +37,7 @@ $thanks_content = '
       <dd>Sylwester Biernacki</dd>
       <dt>fns2 server and link sponsorship (2017-)</dt>
       <dd>OVH PL</dd>
-      <dt>original code author</dt> 
+      <dt>original code author</dt>
       <dd>Yann Hirou</dd>
       <dt>bugfixes, improvements and new features</dt>
       <dt>system administration</dt>

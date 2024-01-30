@@ -10,7 +10,7 @@
 // languages
 include 'languages.php';
 
-// contact 
+// contact
 include 'contact.php';
 
 ?>

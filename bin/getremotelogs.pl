@@ -42,13 +42,13 @@ $LOG_PREFIX .= $str_log_getremotelogs_prefix{$SITE_DEFAULT_LANGUAGE};
 ########################################################################
 # STOP STOP STOP STOP STOP STOP STOP STOP STOP STOP STOP STOPS STOP STOP
 #
-# Do not edit anything below this line           
+# Do not edit anything below this line
 ########################################################################
 
 # retrieve server list
 # for each server
 #   connect & retrieve logfile
-#   for each log line 
+#   for each log line
 #     look for zone ID insert in DB
 #   end foreach
 # end foreach
@@ -68,11 +68,11 @@ my $sth = dbexecute($query,$dbh,LOG);
 while($ref = $sth->fetchrow_hashref()){
 	# connect & retrieve log file into $REMOTE_SERVER_LOGS
 	$command = $SCP_COMMAND  . " -P " . $ref->{'sshport'} . " " . $ref->{'sshlogin'} . "@" . $ref->{'serverip'} . ":" .
-				$ref->{'pathonremote'} . "/logpush.txt " . $REMOTE_SERVER_LOGS . 
+				$ref->{'pathonremote'} . "/logpush.txt " . $REMOTE_SERVER_LOGS .
 				$ref->{'serverip'} . "-logpush.txt " . " 2>&1";
 	@output = `$command`;
 	if($#output>=0){
-		print LOG logtimestamp() . " " . $LOG_PREFIX . " " . 
+		print LOG logtimestamp() . " " . $LOG_PREFIX . " " .
 				sprintf($str_log_error_executing_x{$SITE_DEFAULT_LANGUAGE},
 					$command) . ": \n";
 		foreach(@output){
@@ -92,12 +92,12 @@ while($ref = $sth->fetchrow_hashref()){
 		 # code taken from insertlogs.pl
 
 	 		# insert in DB
-			# escape from mysql... 
+			# escape from mysql...
 			$zonename =~ s/'/\\'/g;
 			$content =~ s/'/\\'/g;
-			$zonename =~ s/"/\\"/g;		
+			$zonename =~ s/"/\\"/g;
 			$content =~ s/"/\\"/g;
-		
+
 			# select zoneid
 			$query = "SELECT id FROM dns_zone WHERE zone='" . $zonename .
 			"'";
@@ -110,23 +110,23 @@ while($ref = $sth->fetchrow_hashref()){
 				my $sth2 = dbexecute($query,$dbh,LOG);
 				$ref2 = $sth2->fetchrow_hashref();
 				if($ref->{'id'}){
-		
+
 					$query = "INSERT INTO dns_log (zoneid, date, content, status,serverid)
-					VALUES ('" . $ref2->{'id'} . "','" . $timestamp . "','" . $content . 
+					VALUES ('" . $ref2->{'id'} . "','" . $timestamp . "','" . $content .
 					"','" . $status . "','" . $ref->{'id'} . "')";
 
 					my $sth2 = dbexecute($query,$dbh,LOG);
 				}
 			}else{
 				$query = "INSERT INTO dns_log (zoneid, date, content, status,serverid)
-				VALUES ('" . $ref2->{'id'} . "','" . $timestamp . "','" . $content . 
+				VALUES ('" . $ref2->{'id'} . "','" . $timestamp . "','" . $content .
 				"','" . $status . "','" . $ref->{'id'} . "')";
 				my $sth2 = dbexecute($query,$dbh,LOG);
 			}
-	
+
 		   # end code from insertlogs.pl
 
-			
+
 
 		} # end while FILE
 		close(FILE);
@@ -135,18 +135,18 @@ while($ref = $sth->fetchrow_hashref()){
 		open(FILE, "> " . $REMOTE_SERVER_LOGS . $ref->{'serverip'} . "-logpush.txt");
 		print FILE "";
 		close FILE;
-		$command = $SCP_COMMAND  . " -P " . $ref->{'sshport'} . " " . $REMOTE_SERVER_LOGS . 
+		$command = $SCP_COMMAND  . " -P " . $ref->{'sshport'} . " " . $REMOTE_SERVER_LOGS .
 				$ref->{'serverip'} . "-logpush.txt " . $ref->{'sshlogin'} . "@" . $ref->{'serverip'} . ":" .
 				$ref->{'pathonremote'} . "/logpush.txt " . " 2>&1";
 
 		@output = `$command`;
 		if($#output>=0){
-			print LOG logtimestamp() . " " . $LOG_PREFIX . " " . 
+			print LOG logtimestamp() . " " . $LOG_PREFIX . " " .
 				sprintf($str_log_error_executing_x{$SITE_DEFAULT_LANGUAGE},
 					$command) . ": \n";
 			foreach(@output){
 				print LOG logtimestamp() . " " . $LOG_PREFIX . "		" . $_;
 			}
 		}
-	} # end else no output error	
+	} # end else no output error
 } # end while SELECT FROM dns_server
