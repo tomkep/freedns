@@ -37,7 +37,7 @@ class Zone {
    *@param string $zonetype type of zone ('P'rimary or 'S'econdary)
    *@param int $zoneid id of zone in DB
    */
-  Function Zone($zonename,$zonetype,$zoneid=0){
+  Function __construct($zonename,$zonetype,$zoneid=0){
     global $l;
     $this->error="";
 
@@ -79,7 +79,7 @@ class Zone {
     global $db,$l;
     $this->error="";
     $zonename = strtolower($zonename);
-    $zonename = mysql_real_escape_string($zonename);
+    $zonename = $db->sh->real_escape_string($zonename);
 
 // because XName has only 1 DNS, only primary OR secondary
 //    $query = "SELECT count(*) FROM dns_zone
@@ -122,7 +122,7 @@ class Zone {
     $this->error="";
     $zonename = strtolower($zonename);
     // sub zone of an existing one ?
-    $upper = split('\.',$zonename);
+    $upper = explode('\.',$zonename);
     reset($upper);
     $tocompare = "";
     $list = array();
@@ -135,7 +135,7 @@ class Zone {
         $tocompare = $tld . "." . $tocompare;
       }
       $query = "SELECT LOWER(zone) from dns_zone WHERE
-      zone='" . mysql_real_escape_string($tocompare) . "' AND userid!='" . $userid . "'";
+      zone='" . $db->sh->real_escape_string($tocompare) . "' AND userid!='" . $userid . "'";
       if ($config->allowsubzones == 1)
         $query .= " AND zonetype = 'P'";
       $res = $db->query($query);
@@ -177,8 +177,8 @@ class Zone {
   Function retrieveID($zonename,$zonetype){
     global $db,$l;
     $this->error="";
-    $zonename = mysql_real_escape_string($zonename);
-    $zonetype = mysql_real_escape_string($zonetype);
+    $zonename = $db->sh->real_escape_string($zonename);
+    $zonetype = $db->sh->real_escape_string($zonetype);
     $query = "SELECT id FROM dns_zone WHERE
     zone='" . $zonename . "' AND zonetype='" . $zonetype . "'";
     $res = $db->query($query);
@@ -217,16 +217,16 @@ class Zone {
     if(!$this->Exists($zonename,$zonetype)){
       // does not exist already ==> OK
       $query = "INSERT INTO dns_zone (zone,zonetype,userid)
-        VALUES ('".mysql_real_escape_string($zonename)."','".
-          mysql_real_escape_string($zonetype)."','".$userid."')";
+        VALUES ('".$db->sh->real_escape_string($zonename)."','".
+          $db->sh->real_escape_string($zonetype)."','".$userid."')";
       $res = $db->query($query);
       if($db->error()){
         $this->error = $l['str_trouble_with_db'];
         return 0;
       }else{
         $this->retrieveID($zonename,$zonetype);
-        $this->zonename=mysql_real_escape_string($zonename);
-        $this->zonetype=mysql_real_escape_string($zonetype);
+        $this->zonename=$db->sh->real_escape_string($zonename);
+        $this->zonetype=$db->sh->real_escape_string($zonetype);
 
         // if $template, fill-in zone with template content
         // modified for current zone
@@ -263,7 +263,7 @@ endif;
         if (!empty($this->error)) {
           // argh! no rollback for myisam.
           $query = sprintf("DELETE FROM dns_zone WHERE zone='%s' AND zonetype='%s' AND userid='%s';",
-            mysql_real_escape_string($zonename), $zonetype, $userid);
+            $db->sh->real_escape_string($zonename), $zonetype, $userid);
           $res = $db->query($query);
           return 0;
         } else {
@@ -307,8 +307,8 @@ endif;
               (zoneid, masters, xfer)
               VALUES ('%s', '%s', '%s')",
               $this->zoneid,
-              mysql_real_escape_string($serverimport),
-              mysql_real_escape_string($serverimport));
+              $db->sh->real_escape_string($serverimport),
+              $db->sh->real_escape_string($serverimport));
             $res2 = $db->query($query);
             if($db->error()){
               $this->error .= $l['str_trouble_with_db'];
@@ -326,7 +326,7 @@ endif;
       }
     }else{
       // check if zone status is D or not
-      $query = "SELECT status FROM dns_zone WHERE zone='" . mysql_real_escape_string($zonename) . "'
+      $query = "SELECT status FROM dns_zone WHERE zone='" . $db->sh->real_escape_string($zonename) . "'
       AND zonetype='" . $zonetype . "'";
       $res = $db->query($query);
       $line = $db->fetch_row($res);
@@ -514,7 +514,7 @@ endif;
       return 0;
     }
     $query = "SELECT userid FROM dns_zone
-      WHERE zone='" . mysql_real_escape_string($zone) . "'";
+      WHERE zone='" . $db->sh->real_escape_string($zone) . "'";
     $res=$db->query($query);
     $line=$db->fetch_row($res);
     if($db->error()){
@@ -528,7 +528,7 @@ endif;
 
   Function _f($r) {
     if ($r=="NULL") return $r;
-    return "'" . mysql_real_escape_string($r) . "'";
+    return "'" . $db->sh->real_escape_string($r) . "'";
   }
 
 //  Function fillinWithTemplate($templatezone, $templatetype)
@@ -547,7 +547,7 @@ endif;
       case 'S':
         $query = "SELECT c.masters,c.xfer FROM dns_confsecondary c, dns_zone z
             WHERE c.zoneid=z.id AND z.zone='" .
-            mysql_real_escape_string($templatezone) .
+            $db->sh->real_escape_string($templatezone) .
             "' AND z.zonetype='S'";
         $res=$db->query($query);
         $line=$db->fetch_row($res);
@@ -571,7 +571,7 @@ endif;
       case 'P':
         $query = "SELECT c.refresh,c.retry,c.expiry,c.minimum,c.xfer,c.defaultttl
           FROM dns_confprimary c, dns_zone z
-          WHERE c.zoneid=z.id AND z.zone='" . mysql_real_escape_string($templatezone) . "'
+          WHERE c.zoneid=z.id AND z.zone='" . $db->sh->real_escape_string($templatezone) . "'
           AND z.zonetype='P'";
         $res=$db->query($query);
         $line=$db->fetch_row($res);
@@ -583,12 +583,12 @@ endif;
             (zoneid,refresh,retry,expiry,minimum,xfer,defaultttl,serial)
             VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')",
             $this->zoneid,
-            mysql_real_escape_string($line[0]),
-            mysql_real_escape_string($line[1]),
-            mysql_real_escape_string($line[2]),
-            mysql_real_escape_string($line[3]),
-            mysql_real_escape_string($line[4]),
-            mysql_real_escape_string($line[5]),
+            $db->sh->real_escape_string($line[0]),
+            $db->sh->real_escape_string($line[1]),
+            $db->sh->real_escape_string($line[2]),
+            $db->sh->real_escape_string($line[3]),
+            $db->sh->real_escape_string($line[4]),
+            $db->sh->real_escape_string($line[5]),
             getSerial());
           $res = $db->query($query);
           if($db->error()){
@@ -599,7 +599,7 @@ endif;
         // fill in records
         $query = "SELECT r.type,r.val1,r.val2,r.val3,r.val4,r.val5,r.ttl
             FROM dns_record r, dns_zone z
-            WHERE r.zoneid=z.id AND z.zone='" . mysql_real_escape_string($templatezone) . "'
+            WHERE r.zoneid=z.id AND z.zone='" . $db->sh->real_escape_string($templatezone) . "'
             AND z.zonetype='P'";
         $res=$db->query($query);
         if($db->error()){
@@ -622,19 +622,19 @@ endif;
 
             switch($line[0]){
               case "WWW":
-                $line[2] = ereg_replace($templatezone."/", $this->zonename."/", $line[2]);
+                $line[2] = preg_replace($templatezone."/", $this->zonename."/", $line[2]);
               case "A":
               case "AAAA":
               case "TXT":
               case "MX":
-                $line[1] = ereg_replace($templatezone."\.\$", $this->zonename.".", $line[1]);
+                $line[1] = preg_replace($templatezone."\.\$", $this->zonename.".", $line[1]);
               case "NS":
               case "CNAME":
               case "SUBNS":
               case "PTR":
               case "SRV":
-                $line[1] = ereg_replace("\.".$templatezone."\.\$", "", $line[1]);
-                $line[1] = ereg_replace("^".$this->zonename."\.\$", "@", $line[1]);
+                $line[1] = preg_replace("\.".$templatezone."\.\$", "", $line[1]);
+                $line[1] = preg_replace("^".$this->zonename."\.\$", "@", $line[1]);
                 break;
             } // end switch
             $query = sprintf("INSERT INTO dns_record
@@ -707,11 +707,11 @@ endif;
                     (zoneid,serial,refresh,retry,expiry,minimum,xfer,defaultttl)
                     VALUES('%s', '%s', '%s', '%s', '%s', '%s', 'any', '86400')",
                     $this->zoneid,
-                    mysql_real_escape_string(intval($soa[1])),
-                    mysql_real_escape_string(intval($soa[2])),
-                    mysql_real_escape_string(intval($soa[3])),
-                    mysql_real_escape_string(intval($soa[4])),
-                    mysql_real_escape_string(intval($soa[5]))
+                    $db->sh->real_escape_string(intval($soa[1])),
+                    $db->sh->real_escape_string(intval($soa[2])),
+                    $db->sh->real_escape_string(intval($soa[3])),
+                    $db->sh->real_escape_string(intval($soa[4])),
+                    $db->sh->real_escape_string(intval($soa[5]))
                     );
                 } // SOA params match
               }
@@ -726,38 +726,38 @@ endif;
               if(!strcmp($this->zonename . ".", $record[1])){
                 $query = sprintf("INSERT INTO dns_record (zoneid,type,val1,ttl)
                     VALUES ('%s', 'NS', '%s', '%s')", $this->zoneid,
-                    mysql_real_escape_string($data[0]),
-                    mysql_real_escape_string($record[2]));
+                    $db->sh->real_escape_string($data[0]),
+                    $db->sh->real_escape_string($record[2]));
               }else{
               // subns
                 $query = sprintf("INSERT INTO dns_record (zoneid,type,val1,val2,ttl)
                     VALUES ('%s', 'SUBNS', '%s', '%s', '%s')", $this->zoneid,
-                    mysql_real_escape_string($shortname),
-                    mysql_real_escape_string($data[0]),
-                    mysql_real_escape_string($record[2]));
+                    $db->sh->real_escape_string($shortname),
+                    $db->sh->real_escape_string($data[0]),
+                    $db->sh->real_escape_string($record[2]));
               }
               break;
             case "MX":
               $query = sprintf("INSERT INTO dns_record (zoneid,type,val1,val2,val3,ttl)
                   VALUES ('%s', 'MX', '%s', '%s', '%s', '%s')", $this->zoneid,
-                  mysql_real_escape_string($shortname),
-                  mysql_real_escape_string($data[0]),
-                  mysql_real_escape_string($data[1]),
-                  mysql_real_escape_string($record[2]));
+                  $db->sh->real_escape_string($shortname),
+                  $db->sh->real_escape_string($data[0]),
+                  $db->sh->real_escape_string($data[1]),
+                  $db->sh->real_escape_string($record[2]));
               break;
             case "A":
               $query = sprintf("INSERT INTO dns_record (zoneid,type,val1,val2,ttl)
                   VALUES ('%s', 'A', '%s', '%s', '%s')", $this->zoneid,
-                  mysql_real_escape_string($shortname),
-                  mysql_real_escape_string($data[0]),
-                  mysql_real_escape_string($record[2]));
+                  $db->sh->real_escape_string($shortname),
+                  $db->sh->real_escape_string($data[0]),
+                  $db->sh->real_escape_string($record[2]));
               break;
             case "AAAA":
               $query = sprintf("INSERT INTO dns_record (zoneid,type,val1,val2,ttl)
                   VALUES ('%s', 'AAAA', '%s', '%s', '%s')", $this->zoneid,
-                  mysql_real_escape_string($shortname),
-                  mysql_real_escape_string($data[0]),
-                  mysql_real_escape_string($record[2]));
+                  $db->sh->real_escape_string($shortname),
+                  $db->sh->real_escape_string($data[0]),
+                  $db->sh->real_escape_string($record[2]));
               break;
             case "CNAME":
               if(preg_match("/^(.*)." . $this->zonename . ".$/",$data[0],$tmp)){
@@ -765,26 +765,26 @@ endif;
               }
               $query = sprintf("INSERT INTO dns_record (zoneid,type,val1,val2,ttl)
                   VALUES ('%s', 'CNAME', '%s', '%s', '%s')", $this->zoneid,
-                  mysql_real_escape_string($shortname),
-                  mysql_real_escape_string($data[0]),
-                  mysql_real_escape_string($record[2]));
+                  $db->sh->real_escape_string($shortname),
+                  $db->sh->real_escape_string($data[0]),
+                  $db->sh->real_escape_string($record[2]));
               break;
             case "PTR":
               $query = sprintf("INSERT INTO dns_record (zoneid,type,val1,val2,ttl)
                   VALUES ('%s', 'PTR', '%s', '%s', '%s')", $this->zoneid,
-                  mysql_real_escape_string($shortname),
-                  mysql_real_escape_string($data[0]),
-                  mysql_real_escape_string($record[2]));
+                  $db->sh->real_escape_string($shortname),
+                  $db->sh->real_escape_string($data[0]),
+                  $db->sh->real_escape_string($record[2]));
               break;
             case "SRV":
               $query = sprintf("INSERT INTO dns_record (zoneid,type,val1,val2,val3,val4,val5,ttl)
                   VALUES ('%s', 'SRV', '%s', '%s', '%s', '%s', '%s', '%s')", $this->zoneid,
-                  mysql_real_escape_string($shortname),
-                  mysql_real_escape_string($data[0]),
-                  mysql_real_escape_string($data[1]),
-                  mysql_real_escape_string($data[2]),
-                  mysql_real_escape_string($data[3]),
-                  mysql_real_escape_string($record[2]));
+                  $db->sh->real_escape_string($shortname),
+                  $db->sh->real_escape_string($data[0]),
+                  $db->sh->real_escape_string($data[1]),
+                  $db->sh->real_escape_string($data[2]),
+                  $db->sh->real_escape_string($data[3]),
+                  $db->sh->real_escape_string($record[2]));
               break;
             case "TXT":
               $txt = $record[4];
@@ -792,9 +792,9 @@ endif;
               $txt = trim($txt, '"');
               $query = sprintf("INSERT INTO dns_record (zoneid,type,val1,val2,ttl)
                   VALUES ('%s', 'TXT', '%s', '%s', '%s')", $this->zoneid,
-                  mysql_real_escape_string($shortname),
-                  mysql_real_escape_string($txt),
-                  mysql_real_escape_string($record[2]));
+                  $db->sh->real_escape_string($shortname),
+                  $db->sh->real_escape_string($txt),
+                  $db->sh->real_escape_string($record[2]));
               break;
             default:
               print "<p><span class=\"error\">" . $l['str_log_unknown'] . "</span>" .
@@ -837,7 +837,7 @@ endif;
     if (!empty($content)) {
       $query = sprintf("INSERT INTO dns_log (zoneid,content,status,serverid) " .
                        "VALUES ('%s', '%s', 'E', '1')",
-                       $this->zoneid, mysql_real_escape_string($content));
+                       $this->zoneid, $db->sh->real_escape_string($content));
       $res = $db->query($query);
     }
     return $this->flagZoneStatus($this->zoneid, 'E');

@@ -34,7 +34,7 @@ class Group {
    *@access public
    *@param string $userid ID of user member of group
    */
-  Function Group($userid){
+  Function __construct($userid){
     global $dbauth,$l,$config;
     $this->error="";
 
@@ -206,7 +206,7 @@ class Group {
       "UPDATE %s SET %s='%s' WHERE %s='%s'",
       $config->userdbtable,
       $config->userdbfldoptions,
-      mysql_real_escape_string($options),
+      $dbauth->sh->real_escape_string($options),
       $config->userdbfldid,
       $id);
     $res=$dbauth->query($query);
@@ -292,7 +292,7 @@ class Group {
       $query .= "(userid='" . $this->groupid ."' OR zone=' Google Apps template')";
     else
       $query .= "userid='" . $this->groupid ."'";
-    if (!empty($zone)) $query .= " AND zone='".mysql_real_escape_string($zone)."'";
+    if (!empty($zone)) $query .= " AND zone='".$db->sh->real_escape_string($zone)."'";
     $query .= " AND status!='D' ORDER BY zone DESC";
     $res = $db->query($query);
     if($db->error()){

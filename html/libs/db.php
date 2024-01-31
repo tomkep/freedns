@@ -35,7 +35,7 @@ class Db {
    *@access public
    *@return object DB database object
    */
-  function Db() {
+  function __construct() {
     global $config;
 
     $this->totaltime = 0;
@@ -64,8 +64,8 @@ class Db {
    *@return object Db database handler
    */
   function connect($host, $user, $pass, $db) {
-    $this->sh = mysql_connect($host, $user, $pass);
-    $res = mysql_select_db($db, $this->sh);
+    $this->sh = new mysqli($host, $user, $pass);
+    $res = $this->sh->select_db($db);
     return $res;
   }
 
@@ -80,9 +80,7 @@ class Db {
    *@return object Db database handler
    */
   function pconnect($host, $user, $pass, $db) {
-    $this->sh = mysql_pconnect($host, $user, $pass);
-    $res = mysql_select_db($db, $this->sh);
-    return $res;
+    return $this->connect("p:" . $host, $user, $pass, $db);
   }
 
   /**
@@ -98,10 +96,10 @@ class Db {
     $mtime = explode(" ",$mtime);
     $mtime = $mtime[1] + $mtime[0];
     $tstart = $mtime;
-    if ($cache && $this->cachecontent[$string]) {
+    if ($cache && $this->cachecontent && $this->cachecontent[$string]) {
       $this->result = $this->cachecontent[$string];
     } else {
-      $this->result = mysql_query($string, $this->sh);
+      $this->result = $this->sh->query($string);
     }
     if ($cache) {
       $this->cachecontent[$string] = $this->result;
@@ -125,7 +123,7 @@ class Db {
    */
   function fetch_row($res) {
     if ($res) {
-      return mysql_fetch_row($this->result);
+      return $this->result->fetch_row();
     }
     return 0;
   }
@@ -139,7 +137,7 @@ class Db {
    */
   function affected_rows($res) {
     if ($res) {
-      return mysql_affected_rows($res);
+      return $res->affected_rows;
     }
     return 0;
   }
@@ -153,7 +151,7 @@ class Db {
    */
   function num_rows($res) {
     if ($res) {
-      return mysql_num_rows($res);
+      return $res->num_rows;
     }
     return 0;
   }
@@ -178,12 +176,12 @@ class Db {
   function error() {
     global $config, $l;
 
-    if (mysql_errno()) {
+    if ($this->sh->errno) {
       mailer($config->emailfrom,
              $config->emailto,
              $config->sitename . $l['str_trouble_with_db'],
              '',
-             mysql_errno() . ": " . mysql_error() . "\n" . $this->lastquery . "\n");
+             $this->sh->errno . ": " . $this->sh->error . "\n" . $this->lastquery . "\n");
       return 1;
     }
     return 0;

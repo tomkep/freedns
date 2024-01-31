@@ -32,7 +32,7 @@ class Userlogs {
    *@param int $groupid id of group
    *@param int $userid user ID
    */
-  Function userlogs($groupid,$userid){
+  Function __cinstruct($groupid,$userid){
     $this->error="";
     $this->groupid=$groupid;
     $this->userid=$userid;
@@ -182,7 +182,7 @@ class Userlogs {
     $this->error="";
     # TODO: fix problem with deleting logs of sub-accounts (use groupid)
     $query = "DELETE FROM dns_userlog
-        WHERE id='" . mysql_real_escape_string($logid) . "'
+        WHERE id='" . $db->sh->real_escape_string($logid) . "'
         AND userid='" . $user->userid ."'";
     $res = $db->query($query);
     if($db->error()){
@@ -207,7 +207,7 @@ class Userlogs {
     $this->error="";
     $query = "DELETE FROM dns_userlog
         WHERE groupid='" . $this->groupid . "'
-        AND date < '" . mysql_real_escape_string($date) . "'";
+        AND date < '" . $db->sh->real_escape_string($date) . "'";
     $res = $db->query($query);
     if($db->error()){
       $this->error = $l['str_trouble_with_db'];

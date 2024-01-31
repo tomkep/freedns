@@ -10,8 +10,8 @@ require "libs/xname.php";
 
 $config = new Config();
 
-if (strlen($_SERVER['SCRIPT_URI'])>0 && substr($_SERVER['SCRIPT_URI'], 0, 5) != "https") {
-  Header("Location: " . $config->mainurl);
+if(!isset($_SERVER['HTTPS'])) {
+  Header("Location: " . $config->mainurl . $_SERVER['REQUEST_URI']);
   exit;
 }
 
@@ -105,12 +105,12 @@ $user = new User($login,$password,$idsession);
 // use $idsession in all urls, including first page
 if(empty($idsession) && $user->authenticated){
   header("Location: " . $config->mainurl
-    . ereg_replace("^/","", $_SERVER['PHP_SELF'])
+    . preg_replace("@^/@","", $_SERVER['PHP_SELF'])
     . "?idsession=" . $user->idsession);
 }
 if(!$user->authenticated && $idsession){
   header("Location: " . $config->mainurl
-    . ereg_replace("^/","", $_SERVER['PHP_SELF']));
+    . preg_replace("@^/@","", $_SERVER['PHP_SELF']));
 }
 
 // overwrite default strings
@@ -121,7 +121,7 @@ if(isset($user->lang)){
   if(isset($_REQUEST) && isset($_REQUEST['language'])){
     $lang = $_REQUEST['language'];
   }else if(isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])){
-    $lang = ereg_replace(",.*", "", $_SERVER['HTTP_ACCEPT_LANGUAGE']);
+    $lang = preg_replace("/,.*/", "", $_SERVER['HTTP_ACCEPT_LANGUAGE']);
   }else{
     if(isset($language)){
       $lang=$language;
@@ -142,7 +142,7 @@ $html->initialize();
 
 if((isset($_REQUEST['logout']) && $_REQUEST['logout']) || (isset($logout) && $logout)){
   $user->logout($idsession);
-  Header("Location: " . $_SERVER['SCRIPT_URI'] . "?language=" . $lang);
+  Header("Location: " . $_SERVER['SCRIPT_NAME'] . "?language=" . $lang);
 }
 
 

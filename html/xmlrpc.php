@@ -109,7 +109,7 @@ function updateArecord($m) {
   if (!empty($req["oldaddress"])) {
     if (!empty($req["newaddress"])) {
       # skip changes if newaddress is the same we already have
-      $currentzone->getARecords($addarr, mysql_real_escape_string($req["name"]));
+      $currentzone->getARecords($addarr, $db->sh->real_escape_string($req["name"]));
       if (count($addarr) == 1 && in_array($req["newaddress"], $addarr)) {
         $ttl = intval($req["ttl"]);
         if (empty($ttl)) $ttl = "-1";
@@ -133,8 +133,8 @@ function updateArecord($m) {
     } else {
       $tmpname = sprintf("%s(%s/%s)",
           (preg_match('/:/', $req["oldaddress"]) ? "aaaa" : "a"),
-          mysql_real_escape_string($req["name"]),
-          mysql_real_escape_string($req["oldaddress"]));
+          $db->sh->real_escape_string($req["name"]),
+          $db->sh->real_escape_string($req["oldaddress"]));
       $currentzone->Delete(array($tmpname),0,0);
     }
     if ($currentzone->error) {
@@ -152,8 +152,8 @@ function updateArecord($m) {
         $fn = "addARecord";
       $res = $currentzone->$fn(
             $zone->zoneid,
-            array(mysql_real_escape_string($req["newaddress"])),
-            array(mysql_real_escape_string($req["name"])),
+            array($db->sh->real_escape_string($req["newaddress"])),
+            array($db->sh->real_escape_string($req["name"])),
             array($ttl),
             $updatereverse);
     if ($currentzone->error) {
@@ -183,7 +183,7 @@ function updateArecord($m) {
       "ttl" => $ttl
     );
 
-  $currentzone->getArecords($ret["addresses"], mysql_real_escape_string($req["name"]));
+  $currentzone->getArecords($ret["addresses"], $db->sh->real_escape_string($req["name"]));
 
   if($currentzone->error){
     return new xmlrpcresp(0, $xmlrpcerruser, $currentzone->error);

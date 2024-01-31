@@ -222,7 +222,7 @@ if($config->usergroups){
             // delete user
 
             // check if user in group
-            $todelete = mysql_real_escape_string($todelete);
+            $todelete = $dbauth->sh->real_escape_string($todelete);
             if($group->isMember($user->userid) && $group->isMember($todelete)){
               // delete user
               $logintodelete=$user->RetrieveLogin($todelete);

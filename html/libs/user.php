@@ -48,7 +48,7 @@ class User extends Auth {
    *@param string $password password
    *@param string $sessionID current session ID, if user already logged in
    */
-  function User($login, $password, $sessionID, $md5=0) {
+  function __construct($login, $password, $sessionID, $md5=0) {
     global $config, $db, $l;
     $this->idsession = 0;
     $this->authenticated = 0;
@@ -57,7 +57,7 @@ class User extends Auth {
     $this->nbrows = $config->defaultnbrows;
 
     if (!empty($login)) {
-      if ($this->Auth($login, $password, $md5)) {
+      if (parent::__construct($login, $password, $md5)) {
         $this->authenticated = 1;
         $id = $this->generateIDSession();
         $query = sprintf(
@@ -233,7 +233,7 @@ class User extends Auth {
     global $db,$l;
 
     $query = "SELECT userid,date FROM dns_session
-    WHERE sessionID='" . mysql_real_escape_string($idsession) . "'";
+    WHERE sessionID='" . $db->sh->real_escape_string($idsession) . "'";
     $res = $db->query($query);
     $line = $db->fetch_row($res);
     if($db->error()){
@@ -318,7 +318,7 @@ class User extends Auth {
       $query .= "(userid='" . $this->userid . "' OR zone=' Google Apps template')";
     else
       $query .= "userid='" . $this->userid . "'";
-    if (!empty($zone)) $query .= " AND zone='".mysql_real_escape_string($zone)."'";
+    if (!empty($zone)) $query .= " AND zone='".$db->sh->real_escape_string($zone)."'";
     $query .= " AND status!='D' ORDER BY zone DESC";
     $res = $db->query($query);
     if($db->error()){

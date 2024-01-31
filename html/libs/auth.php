@@ -33,7 +33,7 @@ class Auth {
    *@param string $login XName login, may be null
    *@param string $password XName password
    */
-  function Auth($login, $password, $md5=0) {
+  function __construct($login, $password, $md5=0) {
     global $config, $dbauth, $l;
 
     $this->error = "";
@@ -115,9 +115,9 @@ class Auth {
           $config->userdbfldid,
           $config->userdbtable,
           $config->userdbfldlogin,
-          mysql_real_escape_string($login),
+          $dbauth->sh->real_escape_string($login),
           $config->userdbfldpassword,
-          mysql_real_escape_string($password));
+          $dbauth->sh->real_escape_string($password));
         $res = $dbauth->query($query);
         $line = $dbauth->fetch_row($res);
         if ($dbauth->error()) {
@@ -150,7 +150,7 @@ class Auth {
       "SELECT count(*) FROM %s WHERE %s='%s'",
       $config->userdbtable,
       $config->userdbfldlogin,
-      mysql_real_escape_string($login));
+      $dbauth->sh->real_escape_string($login));
     $res = $dbauth->query($query);
     $line = $dbauth->fetch_row($res);
     if ($dbauth->error()) {
@@ -215,9 +215,9 @@ class Auth {
                        $config->userdbfldlogin,
                        $config->userdbfldemail,
                        $config->userdbfldpassword,
-                       mysql_real_escape_string($login),
-                       mysql_real_escape_string($email),
-                       mysql_real_escape_string($password));
+                       $dbauth->sh->real_escape_string($login),
+                       $dbauth->sh->real_escape_string($email),
+                       $dbauth->sh->real_escape_string($password));
       $res = $dbauth->query($query);
       if ($dbauth->error()) {
         $this->error = $l['str_trouble_with_db'];
@@ -227,7 +227,7 @@ class Auth {
                        $config->userdbfldid,
                        $config->userdbtable,
                        $config->userdbfldlogin,
-                       mysql_real_escape_string($login));
+                       $dbauth->sh->real_escape_string($login));
       $res = $dbauth->query($query);
       $line = $dbauth->fetch_row($res);
       if ($dbauth->error()) {
@@ -268,7 +268,7 @@ class Auth {
     $query = sprintf("UPDATE %s SET %s='%s' WHERE %s='%s'",
                      $config->userdbtable,
                      $config->userdbfldlogin,
-                     mysql_real_escape_string($login),
+                     $dbauth->sh->real_escape_string($login),
                      $config->userdbfldid,
                      $this->userid);
     $res = $dbauth->query($query);
@@ -352,7 +352,7 @@ class Auth {
                      $config->userdbfldemail,
                      $config->userdbtable,
                      $config->userdbfldlogin,
-                     mysql_real_escape_string($login));
+                     $dbauth->sh->real_escape_string($login));
     $res = $dbauth->query($query);
     $line = $dbauth->fetch_row($res);
     if ($dbauth->error()) {
@@ -377,7 +377,7 @@ class Auth {
     $query = sprintf("UPDATE %s SET %s='%s',%s='%s' WHERE %s='%s'",
                      $config->userdbtable,
                      $config->userdbfldemail,
-                     mysql_real_escape_string($email),
+                     $dbauth->sh->real_escape_string($email),
                      $config->userdbfldvalid,
                      $config->userdbfldvalidnullvalue,
                      $config->userdbfldid,
@@ -557,8 +557,8 @@ class Auth {
                      $config->userdbwaitingflduserid,
                      $config->userdbwaitingfldemail,
                      $config->userdbwaitingfldid,
-                     mysql_real_escape_string($userid),
-                     mysql_real_escape_string($email),
+                     $dbauth->sh->real_escape_string($userid),
+                     $dbauth->sh->real_escape_string($email),
                      $id);
     $res = $dbauth->query($query);
     if ($dbauth->error()) {
@@ -586,7 +586,7 @@ class Auth {
                      $config->userdbwaitingfldemail,
                      $config->userdbwaitingtable,
                      $config->userdbwaitingfldid,
-                     mysql_real_escape_string($id));
+                     $dbauth->sh->real_escape_string($id));
     $res = $dbauth->query($query);
     $line = $dbauth->fetch_row($res);
     if ($dbauth->error()) {
@@ -611,7 +611,7 @@ class Auth {
     }
     # if user changed email to one containing dot, we cannot
     # generate soa properly, switch off the option.
-    $userpart = split('@', $email);
+    $userpart = explode('@', $email);
     if (strpos($userpart[0], '.') !== FALSE) {
       $query = sprintf("SELECT %s FROM %s WHERE %s='%s'",
                        $config->userdbfldoptions,
@@ -626,7 +626,7 @@ class Auth {
         $emailsoa = $match[1];
       }
       if (!empty($emailsoa)) {
-        $options = ereg_replace('emailsoa = 1', 'emailsoa = 0', $options);
+        $options = preg_replace('emailsoa = 1', 'emailsoa = 0', $options);
       }
       $options = "'" . $options . "'";
     } else {
@@ -636,7 +636,7 @@ class Auth {
     $query = sprintf("UPDATE %s SET %s='%s',%s='%s',%s = %s WHERE %s='%s'",
                      $config->userdbtable,
                      $config->userdbfldemail,
-                     mysql_real_escape_string($email),
+                     $dbauth->sh->real_escape_string($email),
                      $config->userdbfldvalid,
                      $config->userdbfldvalidvalue,
                      $config->userdbfldoptions,
@@ -841,7 +841,7 @@ class Auth {
                      $config->userdbfldid,
                      $config->userdbtable,
                      $config->userdbfldlogin,
-                     mysql_real_escape_string($login));
+                     $dbauth->sh->real_escape_string($login));
 
     $res = $dbauth->query($query);
     $line = $dbauth->fetch_row($res);

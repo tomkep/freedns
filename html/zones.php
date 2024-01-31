@@ -61,7 +61,7 @@ if($user->authenticated == 0){
         $nameservers = array_keys($primary->ns);
       }else{
         $secondary = new Secondary($newzone->zonename,$newzone->zonetype,$user->userid);
-        $masters = split(';',$secondary->masters);
+        $masters = explode(';',$secondary->masters);
         $nameservers = array_merge($masters,$ourserverlist);
       }
       $urlpar = $link . '&amp;zonename=' . $newzone->zonename .

@@ -10,10 +10,10 @@ $config = new Config();
 $db = new Db();
 $site = $_SERVER["HTTP_HOST"];
 $host = explode(".", $site);
-$hostn = mysql_real_escape_string($host[0]);
+$hostn = $db->sh->real_escape_string($host[0]);
 array_shift($host);
-$siten = mysql_real_escape_string(implode(".", $host));
-$site = mysql_real_escape_string($site);
+$siten = $db->sh->real_escape_string(implode(".", $host));
+$site = $db->sh->real_escape_string($site);
 
 $query = "SELECT val2,val4
 FROM dns_zone z

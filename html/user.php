@@ -56,7 +56,7 @@ if($user->authenticated == 0){
       ';
       $content .= '<tr><td class="left">' . $l['str_email_soa'] . ':</td>
       <td><input type=checkbox name="emailsoa"';
-      $userpartmail = split('@', $usermail);
+      $userpartmail = explode('@', $usermail);
       if (strpos($userpartmail[0], '.') !== FALSE) {
         $content .= ' disabled';
       } else {

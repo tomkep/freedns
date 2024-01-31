@@ -36,9 +36,9 @@ class Secondary extends Zone {
   *@param object User $user Current user
   */
 
- Function Secondary($zonename,$zonetype,$user){
+ Function __construct($zonename,$zonetype,$user){
   global $db,$l;
-  $this->Zone($zonename,$zonetype);
+  parent::__construct($zonename,$zonetype);
 
   $query = "SELECT masters,xfer,serial
   FROM dns_confsecondary WHERE zoneid='" . $this->zoneid . "'";
@@ -177,7 +177,7 @@ class Secondary extends Zone {
      $primary = substr($primary, 0, -1);
     }
     // split $primary into IPs
-    $server = split(';',$primary);
+    $server = explode(';',$primary);
     reset($server);
     while($ipserver = array_pop($server)){
      $dig = checkDig($ipserver,$this->zonename);
@@ -274,7 +274,7 @@ class Secondary extends Zone {
     }
 
     // suppress duplicate entry of $primary if already in $xferip
-    $xferarray = split(';',$xferip);
+    $xferarray = explode(';',$xferip);
     $xferiparray=array();
     reset($xferarray);
     while($xferitem=array_pop($xferarray)){
@@ -316,7 +316,7 @@ class Secondary extends Zone {
      <li>' . $l['str_secondary_after_modif_add_lines_to_zonefile'] . ':<br>
      <pre>
 ';
-     while(list($notwanted,$nsxname) = each($nsxnames)){
+     foreach($nsxnames as $nsxname) {
       $content .= $this->zonename . '. IN NS ' . $nsxname . '.
 ';
      }
@@ -338,7 +338,7 @@ zone "' . $this->zonename . '" {
   ';
 
 
-  while(list($notwanted,$nsxferip) = each($nsxferips)){
+  foreach($nsxferips as $nsxferip) {
    $content .= $nsxferip . '; ';
   }
 
@@ -352,7 +352,7 @@ zone "' . $this->zonename . '" {
 
      reset($nsxnames);
      $serverlist ='';
-     while(list($notwanted,$nsxname) = each($nsxnames)){
+     foreach($nsxnames as $nsxname) {
       $serverlist .= ' <b>' . $nsxname . '</b>; ';
      }
      $serverlist = substr($serverlist,0,-1);

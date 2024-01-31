@@ -95,10 +95,10 @@ class Primary extends Zone {
    *@param string $zonetype zone type (must be 'P'rimary)
    *@param string $user class member user for current user
    */
-  function Primary($zonename, $zonetype, $user) {
+  function __construct($zonename, $zonetype, $user) {
     global $db,$l;
 
-    $this->Zone($zonename, $zonetype);
+    parent::__construct($zonename, $zonetype);
     // fill in vars
     $res = $db->query("SELECT serial, refresh, retry, expiry, minimum, defaultttl, xfer
       FROM dns_confprimary WHERE zoneid='" . $this->zoneid . "'");
@@ -118,7 +118,8 @@ class Primary extends Zone {
     $this->defaultttl = empty($line[5]) ? 86400 : $line[5];
     $this->xfer = $line[6];
     $this->user = $user;
-    if (ereg('.arpa$', $zonename) || ereg('.ip6.int$', $zonename)) {
+    //if (preg_match('/\.arpa$/', $zonename) || preg_match('/\.ip6\.int$/', $zonename)) {
+    if (preg_match('/\.(ip6\.int|arpa)$/', $zonename)) {
       $this->reversezone = 1;
     } else {
       $this->reversezone = 0;
@@ -455,7 +456,7 @@ class Primary extends Zone {
         $result .= 'PTR <input type="text" name="gen3"></td></tr></table>';
       }
 
-      if (!ereg('in-addr.arpa$', $this->zonename)) {
+      if (!preg_match('/in-addr\.arpa$/', $this->zonename)) {
         # BEGIN SUB-RECORDS
         $result .= sprintf('<h3 class="boxheader">%s</h3', $l['str_primary_sub_zones_title']);
         $result .= sprintf('<p>%s</p>',
@@ -518,7 +519,7 @@ class Primary extends Zone {
         while (isset($this->delegatefromto[$counter])) {
           $deletecount++;
           $result .= '<tr>';
-          list($from, $to) = split('-', $this->delegatefromto[$counter]);
+          list($from, $to) = explode('-', $this->delegatefromto[$counter]);
           $result .= sprintf('<td>%s&nbsp;%s%s%s</td>',
               $l['str_primary_reverse_sub_zone_range_from'], $from,
               $l['str_primary_reverse_sub_zone_range_to'], $to);
@@ -1107,8 +1108,8 @@ class Primary extends Zone {
     }
 
     // parse all http vars
-    while (list($key, $val) = each($httpvars)) {
-      if (ereg("[a-z]+ttl[0-9]+", $key)) {
+    foreach($httpvars as $key => $val) {
+      if (preg_match("/[a-z]+ttl[0-9]+/", $key)) {
          if ($val != $l['str_primary_default']) {
            $this->VerifySOA($val, -1, "TTL");
          }
@@ -1354,14 +1355,14 @@ class Primary extends Zone {
           $res = $db->query($query);
           $newzoneid = 0;
           while($line = $db->fetch_row($res)) {
-            $range =array_pop(array_reverse(split('\.',$line[0])));
-            list($from,$to) = split('-',$range);
+            $range =array_pop(array_reverse(explode('\.',$line[0])));
+            list($from,$to) = explode('-',$range);
             if (!empty($to)) {
               if (($firstip >= $from) && ($firstip <= $to)) {
                 $newzoneid=$line[1];
               }
             } else {
-              list($start, $length) = split('/', $range);
+              list($start, $length) = explode('/', $range);
               if ($firstip >= $start && $length>0 && $length<32 && $firstip < ($start+pow(2, 32-$length))) {
                 $newzoneid=$line[1];
               }
@@ -1512,7 +1513,7 @@ class Primary extends Zone {
     }
     $query = sprintf(
         "DELETE FROM dns_record WHERE zoneid='%d' AND type IN (%s) AND val1='%s'" ,
-        $this->zoneid, $what, mysql_real_escape_string($name));
+        $this->zoneid, $what, $db->sh->real_escape_string($name));
     $res = $db->query($query);
     if ($db->error()) {
       $this->error = $l['str_trouble_with_db'];
@@ -1540,7 +1541,7 @@ class Primary extends Zone {
     // mx(name)
 
 
-    while(list($key,$value) = each($delete)) {
+    foreach($delete as $value) {
       if ($value != "") {
         $newvalue = preg_replace("/^.*\(([^\)]+)\)/","\\1", $value);
 
@@ -1555,7 +1556,7 @@ class Primary extends Zone {
             $valid=$item[2];
             $query = "DELETE FROM dns_record
               WHERE zoneid='" . $this->zoneid . "'
-              AND type='WWW' AND id='" . mysql_real_escape_string($valid) . "'";
+              AND type='WWW' AND id='" . $db->sh->real_escape_string($valid) . "'";
             $result .= sprintf($l['str_primary_deleting_www_x'],
               xssafe($valname)) . "... ";
             break;
@@ -1566,7 +1567,7 @@ class Primary extends Zone {
             $valid=$item[2];
             $query = "DELETE FROM dns_record
               WHERE zoneid='" . $this->zoneid . "'
-              AND type='SRV' AND id='" . mysql_real_escape_string($valid) . "'";
+              AND type='SRV' AND id='" . $db->sh->real_escape_string($valid) . "'";
             $result .= sprintf($l['str_primary_deleting_srv_x'],
               xssafe($valname)) . "... ";
             break;
@@ -1577,7 +1578,7 @@ class Primary extends Zone {
             $valid=$item[2];
             $query = "DELETE FROM dns_record
               WHERE zoneid='" . $this->zoneid . "'
-              AND type='CAA' AND id='" . mysql_real_escape_string($valid) . "'";
+              AND type='CAA' AND id='" . $db->sh->real_escape_string($valid) . "'";
             $result .= sprintf($l['str_primary_deleting_caa_x'],
               xssafe($valname)) . "... ";
             break;
@@ -1589,7 +1590,7 @@ class Primary extends Zone {
             // www    IN    CNAME    toto.
             $query = "DELETE FROM dns_record
               WHERE zoneid='" . $this->zoneid . "'
-              AND type='CNAME' AND id='" . mysql_real_escape_string($valid) . "'";
+              AND type='CNAME' AND id='" . $db->sh->real_escape_string($valid) . "'";
             $result .= sprintf($l['str_primary_deleting_cname_x'],
               xssafe($valname)) . "... ";
             break;
@@ -1618,7 +1619,7 @@ class Primary extends Zone {
             # TODO: use DeleteARecord function(!)
             $query = "DELETE FROM dns_record
               WHERE zoneid='" . $this->zoneid . "'
-              AND type='AAAA' AND id='" . mysql_real_escape_string($val2) . "'";
+              AND type='AAAA' AND id='" . $db->sh->real_escape_string($val2) . "'";
             $result .= sprintf($l['str_primary_deleting_aaaa_x'],
               xssafe($val1)) . "... ";
             break;
@@ -1630,7 +1631,7 @@ class Primary extends Zone {
             $val2 = $item[2];
             $query = "DELETE FROM dns_record
               WHERE zoneid='" . $this->zoneid . "'
-              AND type='TXT' AND id='" . mysql_real_escape_string($val2) . "' ";
+              AND type='TXT' AND id='" . $db->sh->real_escape_string($val2) . "' ";
             $result .= sprintf($l['str_primary_deleting_txt_x'],
               xssafe($val1)) . "... ";
             break;
@@ -1654,7 +1655,7 @@ class Primary extends Zone {
             //     IN    NS    name
             $query = "DELETE FROM dns_record
               WHERE zoneid='" . $this->zoneid . "'
-              AND type='NS' AND id='" . mysql_real_escape_string($valid) . "'";
+              AND type='NS' AND id='" . $db->sh->real_escape_string($valid) . "'";
             $result .= sprintf($l['str_primary_deleting_ns_x'],
               xssafe($valname)) . "... ";
             break;
@@ -1666,7 +1667,7 @@ class Primary extends Zone {
             // *     IN    MX    pref    name
             $query = "DELETE FROM dns_record
               WHERE zoneid='" . $this->zoneid . "'
-              AND type='MX' AND id='" . mysql_real_escape_string($valid) . "'";
+              AND type='MX' AND id='" . $db->sh->real_escape_string($valid) . "'";
             $result .= sprintf($l['str_primary_deleting_mx_x'],
               xssafe($valname)) . "... ";
             break;
@@ -1681,14 +1682,14 @@ class Primary extends Zone {
             $valid=$item[2];
             $query = "DELETE FROM dns_record
               WHERE zoneid='" . $this->zoneid . "'
-              AND type='SUBNS' AND id='" . mysql_real_escape_string($valid) . "'";
+              AND type='SUBNS' AND id='" . $db->sh->real_escape_string($valid) . "'";
             $result .= sprintf($l['str_primary_deleting_sub_zone_x'],
               xssafe($valname)) . "... ";
             break;
 
           case "delegate":
             // $newvalue: XX-YY
-            list($from,$to) = split('-',$newvalue);
+            list($from,$to) = explode('-',$newvalue);
             // remove CNAMEs
             for($cnamecounter=intval($from); $cnamecounter<=intval($to); $cnamecounter++) {
               $query = "DELETE FROM dns_record
@@ -1702,7 +1703,7 @@ class Primary extends Zone {
 
             // remove NS
             $query = "DELETE FROM dns_record WHERE zoneid='" . $this->zoneid . "'
-              AND type='SUBNS' AND val1='" . mysql_real_escape_string($newvalue) . "'";
+              AND type='SUBNS' AND val1='" . $db->sh->real_escape_string($newvalue) . "'";
             $res = $db->query($query);
             if ($db->error()) {
               $this->error=$l['str_trouble_with_db'];
@@ -1711,7 +1712,7 @@ class Primary extends Zone {
             // delete zone
             // use zoneDelete()
             $query = "SELECT userid FROM dns_zone WHERE zone='"
-                . mysql_real_escape_string($newvalue) . "." . $this->zonename . "' AND zonetype='P'";
+                . $db->sh->real_escape_string($newvalue) . "." . $this->zonename . "' AND zonetype='P'";
             $res = $db->query($query);
             $line=$db->fetch_row($res);
             $zonetodelete = new Zone($newvalue . "." . $this->zonename, 'P','',$line[0]);
@@ -1720,7 +1721,7 @@ class Primary extends Zone {
             // delete DELEGATE record
             $query = "DELETE FROM dns_record
               WHERE zoneid='" . $this->zoneid . "'
-              AND type='DELEGATE' AND val1='" . mysql_real_escape_string($newvalue) . "'";
+              AND type='DELEGATE' AND val1='" . $db->sh->real_escape_string($newvalue) . "'";
             break;
         }
       }
@@ -1753,7 +1754,7 @@ class Primary extends Zone {
     $result = '';
     // for each MX, add MX entry
     $i = 0;
-    while(list($key,$value) = each($mx)) {
+    foreach($mx as $value) {
       // value = name
       if ($value != "") {
         if (!$this->checkMXName($value) || !$this->checkAName($mxsrc[$i])) {
@@ -1827,7 +1828,7 @@ class Primary extends Zone {
     $result = '';
     $i=0;
     // for each NS, add NS entry
-    while(list($key,$value) = each($ns)) {
+    foreach($ns as $value) {
       // value = name
       if ($value != "") {
         if (!$this->checkNSName($value)) {
@@ -1887,7 +1888,7 @@ class Primary extends Zone {
     $result = '';
     // for each A, add A entry
     $i = 0;
-    while(list($key,$value) = each($aname)) {
+    foreach($aname as $value) {
       if ($value != "") {
         if (! $this->checkAName($value) ) {
           $this->error = sprintf(
@@ -1908,14 +1909,14 @@ class Primary extends Zone {
               // Check if record already exists
               $query = "SELECT count(*) FROM dns_record WHERE
                 zoneid='" . $zoneid . "' AND type='A'
-                AND val1='" . mysql_real_escape_string($value) . "'";
+                AND val1='" . $db->sh->real_escape_string($value) . "'";
               $res = $db->query($query);
               $line = $db->fetch_row($res);
               if ($line[0] == 0) {
                 // check if CNAME record not already exists
                 $query = "SELECT count(*) FROM dns_record WHERE
                   zoneid='" . $zoneid . "' AND type='CNAME'
-                  AND val1='" . mysql_real_escape_string($value) . "'";
+                  AND val1='" . $db->sh->real_escape_string($value) . "'";
                 $res = $db->query($query);
                 $line = $db->fetch_row($res);
                 if ($line[0] == 0) {
@@ -1924,8 +1925,8 @@ class Primary extends Zone {
                   $ttlval = $this->fixDNSTTL($ttl[$i]);
                   $query = "INSERT INTO dns_record (zoneid, type, val1, val2,ttl)
                     VALUES ('" . $zoneid . "',
-                    'A', '" . mysql_real_escape_string($value) . "',
-                    '" . mysql_real_escape_string($a[$i]) . "','" . $ttlval . "')";
+                    'A', '" . $db->sh->real_escape_string($value) . "',
+                    '" . $db->sh->real_escape_string($a[$i]) . "','" . $ttlval . "')";
                   $db->query($query);
                   if ($db->error()) {
                     $this->error = $l['str_trouble_with_db'];
@@ -1955,8 +1956,8 @@ class Primary extends Zone {
                   $ttlval = $this->fixDNSTTL($ttl[$i]);
                   $query = "INSERT INTO dns_record (zoneid, type, val1, val2,ttl)
                     VALUES ('" . $zoneid . "',
-                    'A', '" . mysql_real_escape_string($value) . "',
-                    '" . mysql_real_escape_string($a[$i]) . "','" . $ttlval . "')";
+                    'A', '" . $db->sh->real_escape_string($value) . "',
+                    '" . $db->sh->real_escape_string($a[$i]) . "','" . $ttlval . "')";
                   $db->query($query);
                   if ($db->error()) {
                     $this->error = $l['str_trouble_with_db'];
@@ -1997,7 +1998,7 @@ class Primary extends Zone {
     $result = '';
     // for each AAAA, add AAAA entry
     $i = 0;
-    while(list($key,$value) = each($aaaaname)) {
+    foreach($aaaaname as $value) {
       if ($value != "") {
         if (! $this->checkAAAAName($value) ) {
           $this->error = sprintf(
@@ -2018,14 +2019,14 @@ class Primary extends Zone {
               // Check if record already exists
               $query = "SELECT count(*) FROM dns_record WHERE
                 zoneid='" . $zoneid . "' AND type='AAAA'
-                AND val1='" . mysql_real_escape_string($value) . "'";
+                AND val1='" . $db->sh->real_escape_string($value) . "'";
               $res = $db->query($query);
               $line = $db->fetch_row($res);
               if ($line[0] == 0) {
                 // check if CNAME record not already exists
                 $query = "SELECT count(*) FROM dns_record WHERE
                   zoneid='" . $zoneid . "' AND type='CNAME'
-                  AND val1='" . mysql_real_escape_string($value) . "'";
+                  AND val1='" . $db->sh->real_escape_string($value) . "'";
                 $res = $db->query($query);
                 $line = $db->fetch_row($res);
                 if ($line[0] == 0) {
@@ -2034,8 +2035,8 @@ class Primary extends Zone {
                   $ttlval = $this->fixDNSTTL($ttl[$i]);
                   $query = "INSERT INTO dns_record (zoneid, type, val1, val2,ttl)
                     VALUES ('" . $zoneid . "',
-                    'AAAA', '" . mysql_real_escape_string($value) . "',
-                    '" . mysql_real_escape_string($aaaa[$i]) . "','" . $ttlval . "')";
+                    'AAAA', '" . $db->sh->real_escape_string($value) . "',
+                    '" . $db->sh->real_escape_string($aaaa[$i]) . "','" . $ttlval . "')";
                   $db->query($query);
                   if ($db->error()) {
                     $this->error = $l['str_trouble_with_db'];
@@ -2068,8 +2069,8 @@ class Primary extends Zone {
                   $ttlval = $this->fixDNSTTL($ttl[$i]);
                   $query = "INSERT INTO dns_record (zoneid, type, val1, val2,ttl)
                     VALUES ('" . $this->zoneid . "',
-                    'AAAA', '" . mysql_real_escape_string($value) . "',
-                    '" . mysql_real_escape_string($aaaa[$i]) . "','" . $ttlval . "')";
+                    'AAAA', '" . $db->sh->real_escape_string($value) . "',
+                    '" . $db->sh->real_escape_string($aaaa[$i]) . "','" . $ttlval . "')";
                   $db->query($query);
                   if ($db->error()) {
                     $this->error = $l['str_trouble_with_db'];
@@ -2126,7 +2127,7 @@ class Primary extends Zone {
     $result = '';
     // for each PTR, add PTR entry
     $i = 0;
-    while(list($key,$value) = each($ptr)) {
+    foreach($ptr as $value) {
       if ($value != "") {
         if (! $this->checkPTRName($value) ) {
           $this->error = sprintf(
@@ -2138,7 +2139,7 @@ class Primary extends Zone {
               $l['str_primary_no_name_for_x'],
               xssafe($value));
           } else {
-            if (ereg('\.$', $value)) {
+            if (preg_match('/\.$/', $value)) {
               $result .= sprintf(
                 $l['str_primary_x_name_ends_with_dot'],
                 xssafe($value)) . "<br>\n";
@@ -2152,14 +2153,14 @@ class Primary extends Zone {
               // Check if record already exists
               $query = "SELECT count(*) FROM dns_record WHERE
                 zoneid='" . $zoneid . "' AND type='PTR'
-                AND val1='" . mysql_real_escape_string($value) . "'";
+                AND val1='" . $db->sh->real_escape_string($value) . "'";
               $res = $db->query($query);
               $line = $db->fetch_row($res);
               if ($line[0] == 0) {
                 // check if CNAME record not already exists
                 $query = "SELECT count(*) FROM dns_record WHERE
                   zoneid='" . $zoneid . "' AND type='CNAME'
-                  AND val1='" . mysql_real_escape_string($value) . "'";
+                  AND val1='" . $db->sh->real_escape_string($value) . "'";
                 $res = $db->query($query);
                 $line = $db->fetch_row($res);
                 if ($line[0] == 0) {
@@ -2168,8 +2169,8 @@ class Primary extends Zone {
                   $ttlval = $this->fixDNSTTL($ttl[$i]);
                   $query = "INSERT INTO dns_record (zoneid, type, val1, val2,ttl)
                     VALUES ('" . $zoneid . "',
-                    'PTR', '" . mysql_real_escape_string($value) . "',
-                    '" . mysql_real_escape_string($ptrname[$i]) . "','" . $ttlval . "')";
+                    'PTR', '" . $db->sh->real_escape_string($value) . "',
+                    '" . $db->sh->real_escape_string($ptrname[$i]) . "','" . $ttlval . "')";
                   $db->query($query);
                   if ($db->error()) {
                     $this->error = $l['str_trouble_with_db'];
@@ -2184,22 +2185,22 @@ class Primary extends Zone {
                       // construct new IP
                       // zone *.in-addr.arpa or *.ip6.arpa
                       $iplist = array_slice(explode('.', $this->zonename), 0, -2);
-                      $ipreg="[^0-9]";
+                      $ipreg="/[^0-9]/";
                       $v6 = preg_match("/\.ip6\.(arpa|int)$/", $this->zonename);
                       if ($v6) {
                         $newval = "";
-                        $iplistv = split('\.', $value);
+                        $iplistv = explode('\.', $value);
                         while(NULL!=($ipitem = array_pop($iplistv))) {
                           $newval .= "." . $ipitem;
                         }
                         $value = substr($newval,1);
-                        $ipreg="[^0-9a-f]";
+                        $ipreg="/[^0-9a-fA-F]/";
                       }
                       $newip = "";
                       $count = 0;
                       while(NULL!=($ipitem = array_pop($iplist))) {
                         $count++;
-                        if (eregi($ipreg, $ipitem)) break;
+                        if (preg_match($ipreg, $ipitem)) break;
                         $newip .= "." . $ipitem;
                       }
                       $newip = substr($newip,1) . "." . $value;
@@ -2275,8 +2276,8 @@ class Primary extends Zone {
                   $ttlval = $this->fixDNSTTL($ttl[$i]);
                   $query = "INSERT INTO dns_record (zoneid, type, val1, val2,ttl)
                     VALUES ('" . $zoneid . "',
-                    'PTR', '" . mysql_real_escape_string($value) . "',
-                    '" . mysql_real_escape_string($ptrname[$i]) . "','" . $ttlval . "')";
+                    'PTR', '" . $db->sh->real_escape_string($value) . "',
+                    '" . $db->sh->real_escape_string($ptrname[$i]) . "','" . $ttlval . "')";
                   $db->query($query);
                   if ($db->error()) {
                     $this->error = $l['str_trouble_with_db'];
@@ -2367,7 +2368,7 @@ class Primary extends Zone {
     // for each CNAME, add CNAME entry
     $i = 0;
     $result = "";
-    while(list($key,$value) = each($cname)) {
+    foreach($cname as $value) {
       if ($value != "") {
         if (! $this->checkCNAMEName($value) ) {
           $this->error = sprintf(
@@ -2386,14 +2387,14 @@ class Primary extends Zone {
             // Check if record already exists
             $query = "SELECT count(*) FROM dns_record WHERE
               zoneid='" . $this->zoneid . "' AND type='CNAME'
-              AND val1='" . mysql_real_escape_string($value) . "'";
+              AND val1='" . $db->sh->real_escape_string($value) . "'";
             $res = $db->query($query);
             $line = $db->fetch_row($res);
             if ($line[0] == 0) {
               // check if A record don't already exist
               $query = "SELECT count(*) FROM dns_record WHERE
                 zoneid='" . $this->zoneid . "' AND type='A'
-                AND val1='" . mysql_real_escape_string($value) . "'";
+                AND val1='" . $db->sh->real_escape_string($value) . "'";
               $res = $db->query($query);
               $line = $db->fetch_row($res);
               if ($line[0] == 0) {
@@ -2403,8 +2404,8 @@ class Primary extends Zone {
                 $ttlval = $this->fixDNSTTL($ttl[$i]);
                 $query = "INSERT INTO dns_record (zoneid, type, val1, val2,ttl)
                   VALUES ('" . $this->zoneid . "', 'CNAME', '"
-                  . mysql_real_escape_string($value) . "', '"
-                  . mysql_real_escape_string($cnamea[$i]) . "','" . $ttlval . "')";
+                  . $db->sh->real_escape_string($value) . "', '"
+                  . $db->sh->real_escape_string($cnamea[$i]) . "','" . $ttlval . "')";
                 $db->query($query);
                 if ($db->error()) {
                   $this->error = $l['str_trouble_with_db'];
@@ -2446,7 +2447,7 @@ class Primary extends Zone {
     // for each TXT, add TXT entry
     $i = -1;
     $result = "";
-    while(list($key,$value) = each($txt)) {
+    foreach($txt as $value) {
       $i++;
       if ($value == "") {
         continue;
@@ -2466,7 +2467,7 @@ class Primary extends Zone {
       // Check if CNAME record already exists
       $query = "SELECT count(*) FROM dns_record WHERE
           zoneid='" . $this->zoneid . "' AND type='CNAME'
-          AND val1='" . mysql_real_escape_string($value) . "'";
+          AND val1='" . $db->sh->real_escape_string($value) . "'";
       $res = $db->query($query);
       $line = $db->fetch_row($res);
       if ($line[0] != 0) {
@@ -2482,8 +2483,8 @@ class Primary extends Zone {
       $ttlval = $this->fixDNSTTL($ttl[$i]);
       $query = "INSERT INTO dns_record (zoneid, type, val1, val2,ttl)
         VALUES ('" . $this->zoneid . "', 'TXT', '"
-        . mysql_real_escape_string($value) . "', '"
-        . mysql_real_escape_string($newstring) . "','" . $ttlval . "')";
+        . $db->sh->real_escape_string($value) . "', '"
+        . $db->sh->real_escape_string($newstring) . "','" . $ttlval . "')";
       $db->query($query);
       if ($db->error()) {
         $this->error = $l['str_trouble_with_db'];
@@ -2524,7 +2525,7 @@ class Primary extends Zone {
     // for each WWW, add WWW entry
     $i = 0;
     $result = "";
-    while(list($key, $value) = each($www)) {
+    foreach($www as $value) {
       if ($value != "") {
         if (!$this->checkWWWName($value)) {
           $this->error = sprintf(
@@ -2544,7 +2545,7 @@ class Primary extends Zone {
             // Check if record already exists
             $query = "SELECT count(*) FROM dns_record WHERE
               zoneid='" . $this->zoneid . "'
-              AND val1='" . mysql_real_escape_string($value) . "'
+              AND val1='" . $db->sh->real_escape_string($value) . "'
               AND type IN ('CNAME','A','WWW')";
             $res = $db->query($query);
             $line = $db->fetch_row($res);
@@ -2558,8 +2559,8 @@ class Primary extends Zone {
                 "(zoneid, type, val1, val2, val3, val4, ttl) " .
                 "VALUES ('%s', 'WWW', '%s', '%s', '%s', '%s', '%s')",
                 $this->zoneid,
-                mysql_real_escape_string($value),
-                mysql_real_escape_string($wwwstring[$i]),
+                $db->sh->real_escape_string($value),
+                $db->sh->real_escape_string($wwwstring[$i]),
                 $config->webserverip, $wwwr[$i], $ttlval);
               $db->query($query);
               if ($db->error()) {
@@ -2597,7 +2598,7 @@ class Primary extends Zone {
     // for each SUBNS, add NS entry
     $i = 0;
     $result = "";
-    while(list($key,$value) = each($subns)) {
+    foreach($subns as $value) {
       if ($value != "") {
         if (!$this->checkSUBNSName($value)) {
           $this->error = sprintf(
@@ -2622,8 +2623,8 @@ class Primary extends Zone {
               xssafe($value)) . "... ";
             $query = "SELECT count(*) FROM dns_record
               WHERE zoneid='" . $this->zoneid . "' AND type='SUBNS'
-              AND val1='" . mysql_real_escape_string($value) . "'
-              AND val2='" . mysql_real_escape_string($subnsa[$i]) . "'";
+              AND val1='" . $db->sh->real_escape_string($value) . "'
+              AND val2='" . $db->sh->real_escape_string($subnsa[$i]) . "'";
             $res=$db->query($query);
             $line = $db->fetch_row($res);
             if ($db->error()) {
@@ -2633,8 +2634,8 @@ class Primary extends Zone {
                 $ttlval=$this->fixDNSTTL($ttl[$i]);
                 $query = "INSERT INTO dns_record (zoneid, type, val1, val2,ttl)
                   VALUES ('" . $this->zoneid . "', 'SUBNS', '"
-                  . mysql_real_escape_string($value) . "', '"
-                  . mysql_real_escape_string($subnsa[$i]) . "','" . $ttlval . "')";
+                  . $db->sh->real_escape_string($value) . "', '"
+                  . $db->sh->real_escape_string($subnsa[$i]) . "','" . $ttlval . "')";
                 $db->query($query);
                 if ($db->error()) {
                   $this->error = $l['str_trouble_with_db'];
@@ -2669,18 +2670,18 @@ class Primary extends Zone {
 
     $i = 0;
     $result = "";
-    while(list($key,$value) = each($delegatefrom)) {
+    foreach($delegatefrom as $value) {
       if (!empty($value)) {
         $result .= sprintf(
           $l['str_primary_adding_delegate_x'],
           xssafe($value),
           xssafe($delegateto[$i])) . "... ";
-        if (!ereg('^[0-9]+$',$value)) {
+        if (!preg_match('/^[0-9]+$/',$value)) {
           $this->error = sprintf(
             $l['str_primary_bad_lower_limit_x'],
             xssafe($value));
         } else {
-          if (!ereg('^[0-9]+$',$delegateto[$i])||$delegateto[$i]>255) {
+          if (!preg_match('/^[0-9]+$/',$delegateto[$i])||$delegateto[$i]>255) {
             $this->error = sprintf(
               $l['str_primary_bad_upper_limit_x'],
               xssafe($delegateto[$i]));
@@ -2713,7 +2714,7 @@ class Primary extends Zone {
                       $this->error = $l['str_trouble_with_db'];
                     } else {
                       while($line = $db->fetch_row($res)) {
-                        list($from,$to)=split('-',$line[0]);
+                        list($from,$to)=explode('-',$line[0]);
                         if ((($from <= $value) && ($to >= $value)) ||
                           (($from >= $value) && ($from <= $delegateto[$i]))) {
                           $this->error = sprintf(
@@ -2728,8 +2729,8 @@ class Primary extends Zone {
                         $ttlval = $this->fixDNSTTL($ttl[$i]);
                         $query = "INSERT INTO dns_record (zoneid, type, val1, val2, ttl)
                           VALUES ('" . $this->zoneid . "', 'DELEGATE', '"
-                          . mysql_real_escape_string($value . "-" . $delegateto[$i]) . "','"
-                          . mysql_real_escape_string($delegateuser[$i]) . "','"
+                          . $db->sh->real_escape_string($value . "-" . $delegateto[$i]) . "','"
+                          . $db->sh->real_escape_string($delegateuser[$i]) . "','"
                           . $ttlval . "')";
                         $db->query($query);
                         if ($db->error()) {
@@ -2739,7 +2740,7 @@ class Primary extends Zone {
                           // Can NOT use standard create way because
                           // of EXIST check. BUG: can not insert userlog
                           $query = "INSERT INTO dns_zone (zone,zonetype,userid) VALUES ('" .
-                            mysql_real_escape_string($value."-".$delegateto[$i].".".$this->zonename)
+                            $db->sh->real_escape_string($value."-".$delegateto[$i].".".$this->zonename)
                             . "','P','".$newuserid."')";
                           $res = $db->query($query);
                           if ($db->error()) {
@@ -2753,9 +2754,9 @@ class Primary extends Zone {
                               $query = "INSERT INTO dns_record
                                 (zoneid,type,val1,val2,ttl)
                                 VALUES ('" . $this->zoneid . "',
-                                'SUBNS','" . mysql_real_escape_string($value) . "-"
-                                . mysql_real_escape_string($delegateto[$i])
-                                . "','" . mysql_real_escape_string($nskey) . "','"
+                                'SUBNS','" . $db->sh->real_escape_string($value) . "-"
+                                . $db->sh->real_escape_string($delegateto[$i])
+                                . "','" . $db->sh->real_escape_string($nskey) . "','"
                                 . $this->fixDNSTTL($this->nsttl[$nskey]) . "')";
                               $res = $db->query($query);
                               if ($db->error()) {
@@ -2778,8 +2779,8 @@ class Primary extends Zone {
                                 ('" . $this->zoneid . "',
                                 'CNAME', '" . $cnamecounter . "',
                                 '" . $cnamecounter . "."
-                                . mysql_real_escape_string($value) . "-"
-                                . mysql_real_escape_string($delegateto[$i]) . "."
+                                . $db->sh->real_escape_string($value) . "-"
+                                . $db->sh->real_escape_string($delegateto[$i]) . "."
                                 . $this->zonename . ".',"
                                 . "'" . $ttlval . "')";
                               $db->query($query);
@@ -2824,7 +2825,7 @@ class Primary extends Zone {
     // for each SRV, add SRV entry
     $i = 0;
     $result = "";
-    while(list($key,$value) = each($srvname)) {
+    foreach($srvname as $value) {
       if ($value != "") {
         if (!$this->checkSRVName($value)
           || !$this->checkSRVPort($srvport[$i])
@@ -2857,9 +2858,9 @@ class Primary extends Zone {
                 // Check if record already exists
                 $query = "SELECT count(*) FROM dns_record WHERE
                   zoneid='" . $this->zoneid . "' AND type='SRV'
-                  AND val1='" . mysql_real_escape_string($value) . "'
-                  AND val4='" . mysql_real_escape_string($srvport[$i]) . "'
-                  AND val5='" . mysql_real_escape_string($srvvalue[$i]) ."'";
+                  AND val1='" . $db->sh->real_escape_string($value) . "'
+                  AND val4='" . $db->sh->real_escape_string($srvport[$i]) . "'
+                  AND val5='" . $db->sh->real_escape_string($srvvalue[$i]) ."'";
                 $res = $db->query($query);
                 $line = $db->fetch_row($res);
                 if ($line[0] == 0) {
@@ -2868,11 +2869,11 @@ class Primary extends Zone {
                   $ttlval = $this->fixDNSTTL($ttl[$i]);
                   $query = "INSERT INTO dns_record (zoneid, type, val1, val2, val3,val4,val5,ttl)
                     VALUES ('" . $this->zoneid . "', 'SRV', '"
-                    . mysql_real_escape_string($value) . "', '"
-                    . mysql_real_escape_string($srvpriority[$i]) . "','"
-                    . mysql_real_escape_string($srvweight[$i]) . "','"
-                    . mysql_real_escape_string($srvport[$i]) . "','"
-                    . mysql_real_escape_string($srvvalue[$i]) . "','"
+                    . $db->sh->real_escape_string($value) . "', '"
+                    . $db->sh->real_escape_string($srvpriority[$i]) . "','"
+                    . $db->sh->real_escape_string($srvweight[$i]) . "','"
+                    . $db->sh->real_escape_string($srvport[$i]) . "','"
+                    . $db->sh->real_escape_string($srvvalue[$i]) . "','"
                     . $ttlval . "')";
                   $db->query($query);
                   if ($db->error()) {
@@ -2911,7 +2912,7 @@ class Primary extends Zone {
     // for each CAA, add CAA entry
     $i = 0;
     $result = "";
-    while(list($key,$value) = each($caaname)) {
+    foreach($caaname as $value) {
       if ($value != "") {
         if (!$this->checkCAAName($value)) {
           $this->error = sprintf(
@@ -2934,9 +2935,9 @@ class Primary extends Zone {
               // Check if record already exists
               $query = "SELECT count(*) FROM dns_record WHERE
                 zoneid='" . $this->zoneid . "' AND type='CAA'
-                AND val1='" . mysql_real_escape_string($value) . "'
-                AND val3='" . mysql_real_escape_string($caatag[$i]) . "'
-                AND val4='" . mysql_real_escape_string($caavalue[$i]) ."'";
+                AND val1='" . $db->sh->real_escape_string($value) . "'
+                AND val3='" . $db->sh->real_escape_string($caatag[$i]) . "'
+                AND val4='" . $db->sh->real_escape_string($caavalue[$i]) ."'";
               $res = $db->query($query);
               $line = $db->fetch_row($res);
               if ($line[0] == 0) {
@@ -2945,10 +2946,10 @@ class Primary extends Zone {
                 $ttlval = $this->fixDNSTTL($ttl[$i]);
                 $query = "INSERT INTO dns_record (zoneid, type, val1, val2, val3, val4, ttl)
                   VALUES ('" . $this->zoneid . "', 'CAA', '"
-                  . mysql_real_escape_string($value) . "', '"
-                  . mysql_real_escape_string($caaflags[$i]) . "','"
-                  . mysql_real_escape_string($caatag[$i]) . "','"
-                  . mysql_real_escape_string($caavalue[$i]) . "','"
+                  . $db->sh->real_escape_string($value) . "', '"
+                  . $db->sh->real_escape_string($caaflags[$i]) . "','"
+                  . $db->sh->real_escape_string($caatag[$i]) . "','"
+                  . $db->sh->real_escape_string($caavalue[$i]) . "','"
                   . $ttlval . "')";
                 $db->query($query);
                 if ($db->error()) {
@@ -3042,14 +3043,14 @@ class Primary extends Zone {
         $res = $db->query($query);
         $newzoneid = 0;
         while($line = $db->fetch_row($res)) {
-          $range = array_pop(array_reverse(split('\.',$line[0])));
-          list($from,$to) = split('-',$range);
+          $range = array_pop(array_reverse(explode('\.',$line[0])));
+          list($from,$to) = explode('-',$range);
           if (!empty($to)) {
             if (($firstip >= $from) && ($firstip <= $to)) {
               $newzoneid=$line[1];
             }
           } else {
-            list($start, $length) = split('/', $range);
+            list($start, $length) = explode('/', $range);
             if ($firstip >= $start && $length>0 && $length<32 && $firstip < ($start+pow(2, 32-$length))) {
               $newzoneid=$line[1];
             }
@@ -3298,7 +3299,7 @@ class Primary extends Zone {
    */
   function tempZoneFile() {
     global $config;
-    $tmpzone = ereg_replace("/","\\",$this->zonename);
+    $tmpzone = preg_replace("/","\\",$this->zonename);
     return ("{$config->tmpdir}$tmpzone.{$this->zonetype}");
   }
 
@@ -3385,9 +3386,9 @@ class Primary extends Zone {
     $content  = "\n\$TTL " . $tttl . " ; " . $l['str_primary_default_ttl'] ;
 
     if ($user->emailsoa) {
-      $mail = ereg_replace("@",".",$user->Retrievemail()) . ".";
+      $mail = preg_replace("/@/",".",$user->Retrievemail()) . ".";
     } else {
-      $uh = split("@", $config->soamail);
+      $uh = explode("@", $config->soamail);
       $mail = $uh[0] . "+" . $this->zoneid . "." . $uh[1];
     }
     $zonename = $zonename . ".";
@@ -3522,7 +3523,7 @@ class Primary extends Zone {
    *@return string ttl value for DB insertion
    */
   function fixDNSTTL($ttl) {
-    global $l;
+    global $db, $l;
 
     if (empty($ttl)) {
       $ttlval = "-1";
@@ -3530,7 +3531,7 @@ class Primary extends Zone {
       if ($ttl == $l['str_primary_default'])
         $ttlval = "-1";
       else
-        $ttlval = mysql_real_escape_string($ttl);
+        $ttlval = $db->sh->real_escape_string($ttl);
     }
     return $ttlval;
   }
@@ -3684,7 +3685,7 @@ class Primary extends Zone {
     } else {
       if (!$this->user->ipv6) {
         // no IPv6
-        if (ereg("[a-zA-Z]",$string) || ($string > 255)) {
+        if (preg_match("/[a-zA-Z]/",$string) || ($string > 255)) {
           $result = 0;
         } else {
           $result = 1;
@@ -3825,7 +3826,7 @@ class Primary extends Zone {
 
   function checkWWWValue($string) {
     $string = strtolower($string);
-    if (ereg('^http://', $string) || ereg('^https://', $string))
+    if (preg_match('@^http://@', $string) || preg_match('@^https://@', $string))
       return 1;
     return 0;
   }
@@ -3868,7 +3869,7 @@ class Primary extends Zone {
     if (count(explode('_',$string,2))>1)
       return 0;
     $allowed = "_0123456789abcdefghijklmnopqrstuvwxyz-";
-    if (ereg('\.ip6\.arpa$', $this->zonename)) $allowed = "." . $allowed;
+    if (preg_match('/\.ip6\.arpa$/', $this->zonename)) $allowed = "." . $allowed;
     // only specified char
     if (strspn($string, $allowed) != strlen($string)) {
       $result = 0;
@@ -3907,7 +3908,7 @@ class Primary extends Zone {
     $string = str_replace("." . $this->zonename . ".", "", $string);
     // remove well-known protocols before checking name
     $parts = explode('.', $string);
-    while (list($k, $v) = each ($parts) ) {
+    foreach($parts as $k => $v) {
       if (in_array($v, array('_tls', '_udp', '_tcp'))) {
         unset($parts[$k]);
       }

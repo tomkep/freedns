@@ -76,13 +76,11 @@
 
   # disclaimer row
   $content .= '<tr><td width="65%" align="right">';
-  $_url = sprintf('disclaimer.php?language=%s', $lang);
-  $_url2 = sprintf('%sdisclaimer.php', $config->mainurl);
-  $_winopt = sprintf("'%s','M','toolbar=no,location=no,directories=no," .
-      "status=no,alwaysraised=yes,dependant=yes,menubar=no,scrollbars=yes," .
-      "resizable=yes,width=640,height=480'", $_url);
-  $_disclaimer = sprintf('<a target=_blank href="%s" onclick="window.open(%s)">%s</a>',
-      $_url, $_winopt, $_url2);
+  $_url = sprintf('%sdisclaimer.php', $config->mainurl);
+  $_winopt = "'disclaimer.php?language=" . $lang . "','M'," .
+      "'toolbar=no,location=no,directories=no,status=no,alwaysraised=yes," .
+      "dependant=yes,menubar=no,scrollbars=yes,resizable=yes,width=640,height=480'";
+  $_disclaimer = sprintf('<a onclick="window.open(%s)">%s</a>', $_winopt, $_url);
   $content .= sprintf($l['str_i_have_read_and_i_understand_discl_available_at_x'], $_disclaimer);
   $content .= '</td>';
   $content .= '<td><input type="checkbox" name="ihaveread" value="1"></td></tr>';

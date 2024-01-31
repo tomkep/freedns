@@ -32,7 +32,7 @@ Class Html{
   *
   *@access public
   */
- function Html(){
+ function __construct(){
   return $this;
  }
 

@@ -322,7 +322,7 @@ function checkName($string){
  */
 
 function checkNet($string) {
-  if (ereg("(.*)/([0-9][0-9]{0,2})", $string, $net)) {
+  if (preg_match("@(.*)/([0-9][0-9]{0,2})@", $string, $net)) {
     $string = $net[1];
     $net = $net[2];
   } else {
@@ -341,7 +341,7 @@ function checkNet($string) {
 
 function checkPrimary($string){
   $primarylist = explode(';', trim($string, ";"));
-  while(list($key,$value) = each($primarylist)){
+  foreach($primarylist as $value) {
     if (!checkNet(trim($value, " "))) {
       return 0;
     }
@@ -404,10 +404,10 @@ function checkDig($server,$zone){
   // return *
   // if "connection timed out" return "connection timed out"
 
-  if(ereg("status: ([[:alnum:]]+),",$result,$status)){
+  if(preg_match("/status: ([[:alnum:]]+),/",$result,$status)){
     return $status[1];
   }else{
-    if(ereg("connection timed out",$result)){
+    if(preg_match("/connection timed out/",$result)){
       return "connection timed out";
     }else{
       return "unknown problem";
@@ -435,7 +435,7 @@ function DigSerial($server,$zone){
   $zone = escapeshellarg($zone);
   $cmd = escapeshellcmd("$config->bindig @$server $zone soa -b '$config->nsaddress' +short");
   $result = shell_exec($cmd);
-  if(ereg("try again",$result)){
+  if(preg_match("/try again/",$result)){
     return $result;
   }else{
     preg_match("/^[^;\s\t]+ [^\s\t]+ ([0-9]+) .*/", $result, $serial);
@@ -631,7 +631,7 @@ function GetDirList($dir){
     $list = array();
     if ($handle = opendir($dir)){
     while (false !== ($file = readdir($handle))) {
-      if (ereg("^[a-z][a-z]$", $file) && file_exists($dir."/".$file."/strings.php")){
+      if (preg_match("/^[a-z][a-z]$/", $file) && file_exists($dir."/".$file."/strings.php")){
         array_push($list, $file);
       }
     }
@@ -648,13 +648,13 @@ function GetDirList($dir){
  *@return string $ipv6 ipv6 address in nibble format
  */
 function ConvertIPv6toDotted($string, $bytes = 32){
-  if(ereg(":",$string)){
-    $ipsplit = split(":",$string);
+  if(preg_match("/:/",$string)){
+    $ipsplit = explode(":",$string);
     $newiparray = array();
     if(count($ipsplit) < $bytes / 4){
       // total: 8 fields separated by ":"
       reset($ipsplit);
-      while(list($null,$ipitem) = each($ipsplit)){
+      foreach($ipsplit as $ipitem) {
         if($ipitem == ''){
           for($count=0;$count < ($bytes / 4) +1 - count($ipsplit);$count++){
             array_push($newiparray,'0000');
@@ -668,7 +668,7 @@ function ConvertIPv6toDotted($string, $bytes = 32){
     }
     $ipsplit = array();
     reset($newiparray);
-    while(list($null,$ipitem) = each($newiparray)){
+    foreach($newiparray as $ipitem) {
       while(strlen($ipitem) < 4){
         $ipitem = '0' . $ipitem;
       }
