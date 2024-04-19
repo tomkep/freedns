@@ -32,7 +32,7 @@ class Userlogs {
    *@param int $groupid id of group
    *@param int $userid user ID
    */
-  Function __cinstruct($groupid,$userid){
+  Function __construct($groupid,$userid){
     $this->error="";
     $this->groupid=$groupid;
     $this->userid=$userid;
